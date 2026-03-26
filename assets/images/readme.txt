@@ -1,0 +1,1 @@
+This folder contains all the images used in the application. Add the provided images here and reference them in the code.

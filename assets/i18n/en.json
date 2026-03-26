@@ -1,0 +1,80 @@
+{
+  "appName": "SmartCast",
+  "appSubtitle": "Smart Cast Health Monitoring System",
+
+  "common": {
+    "next": "Next",
+    "skip": "Skip",
+    "login": "Login",
+    "logout": "Logout",
+    "signUp": "Sign Up",
+    "register": "Register",
+    "done": "Done",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "loading": "Loading...",
+    "retry": "Retry",
+    "search": "Search"
+  },
+
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "fullName": "Full Name",
+    "phone": "Phone Number",
+    "rememberMe": "Remember Me",
+    "forgotPassword": "Forgot Password?",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "signInWithEmail": "Sign In with Email",
+    "createNewAccount": "Create New Account",
+    "loginSuccess": "Login successful",
+    "signUpSuccess": "Account created successfully",
+    "logoutSuccess": "Logged out successfully"
+  },
+
+  "validation": {
+    "emailRequired": "Email is required",
+    "invalidEmail": "Invalid email address",
+    "passwordRequired": "Password is required",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "passwordMismatch": "Passwords do not match",
+    "nameRequired": "Name is required"
+  },
+
+  "errors": {
+    "serverError": "Server error occurred",
+    "networkError": "Network error occurred",
+    "cacheError": "Cache error occurred",
+    "unknownError": "Unknown error occurred",
+    "noConnection": "No internet connection",
+    "tryAgain": "Please try again"
+  },
+
+  "health": {
+    "monitorYourHealth": "Monitor Your Healing Vital Signs",
+    "pressure": "Pressure",
+    "temperature": "Temperature",
+    "circulation": "Circulation",
+    "movementTracking": "Movement Tracking",
+    "vitalSigns": "Vital Signs",
+    "healthData": "Health Data",
+    "recordHealthData": "Record Health Data",
+    "viewHistory": "View History",
+    "latestReading": "Latest Reading",
+    "noData": "No data available",
+    "attachSmartSensor": "Attach the smart sensor to your cast to receive real-time data on pressure, temperature, circulation indicators, and movement tracking — ensuring optimal healing and preventing complications."
+  },
+
+  "onboarding": {
+    "welcome": "Welcome to SmartCast",
+    "welcomeSubtitle": "Smart Cast Health Monitoring System",
+    "monitorYourHealing": "Monitor Your Healing Vital Signs",
+    "captureOrConnect": "Capture or connect your smart cast, and we'll track pressure levels, swelling indicators, and healing progress in real time to ensure safe recovery.",
+    "getStarted": "Get Started"
+  }
+}
