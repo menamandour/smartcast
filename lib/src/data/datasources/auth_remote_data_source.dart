@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:smartcast/src/core/constants/app_constants.dart';
 import 'package:smartcast/src/core/errors/exceptions.dart';
 import 'package:smartcast/src/data/models/user_model.dart';
 
@@ -27,6 +28,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String email,
     required String password,
   }) async {
+    if (!AppConstants.useRealApi) {
+      await Future.delayed(const Duration(seconds: 1));
+      return UserModel(
+        id: "mock_user_1",
+        email: email, // Use the entered email
+        fullName: "Mock User",
+        token: "mock_jwt_token_xyz",
+        createdAt: DateTime.now(),
+      );
+    }
+
     try {
       final response = await dio.post(
         '/auth/login',
@@ -55,6 +67,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String fullName,
     String? phone,
   }) async {
+    if (!AppConstants.useRealApi) {
+      await Future.delayed(const Duration(seconds: 1));
+      return UserModel(
+        id: "mock_user_${DateTime.now().millisecondsSinceEpoch}",
+        email: email,
+        fullName: fullName,
+        phone: phone,
+        token: "mock_jwt_token_new",
+        createdAt: DateTime.now(),
+      );
+    }
+
     try {
       final response = await dio.post(
         '/auth/register',
@@ -83,6 +107,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<void> logout() async {
+    if (!AppConstants.useRealApi) return;
+
     try {
       await dio.post('/auth/logout');
     } on DioException catch (e) {
@@ -94,6 +120,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<UserModel> getCurrentUser() async {
+    if (!AppConstants.useRealApi) {
+      return UserModel(
+        id: "mock_user_1",
+        email: "test@smartcast.com",
+        fullName: "Mock User",
+        token: "mock_jwt_token_xyz",
+        createdAt: DateTime.now(),
+      );
+    }
+
     try {
       final response = await dio.get('/auth/me');
 

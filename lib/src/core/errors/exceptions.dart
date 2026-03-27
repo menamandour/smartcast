@@ -2,7 +2,7 @@ class ServerException implements Exception {
   final String message;
   final String? code;
 
-  ServerException({required this.message, this.code});
+  const ServerException({required this.message, this.code});
 
   @override
   String toString() => 'ServerException: $message (code: $code)';
@@ -11,7 +11,7 @@ class ServerException implements Exception {
 class NetworkException implements Exception {
   final String message;
 
-  NetworkException({required this.message});
+  const NetworkException({required this.message});
 
   @override
   String toString() => 'NetworkException: $message';
@@ -20,7 +20,7 @@ class NetworkException implements Exception {
 class CacheException implements Exception {
   final String message;
 
-  CacheException({required this.message});
+  const CacheException({required this.message});
 
   @override
   String toString() => 'CacheException: $message';
@@ -29,7 +29,7 @@ class CacheException implements Exception {
 class ValidationException implements Exception {
   final String message;
 
-  ValidationException({required this.message});
+  const ValidationException({required this.message});
 
   @override
   String toString() => 'ValidationException: $message';
@@ -38,7 +38,7 @@ class ValidationException implements Exception {
 class UnknownException implements Exception {
   final String message;
 
-  UnknownException({required this.message});
+  const UnknownException({required this.message});
 
   @override
   String toString() => 'UnknownException: $message';

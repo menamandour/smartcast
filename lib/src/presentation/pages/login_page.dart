@@ -71,18 +71,23 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               // Logo
               Center(
-                child: Container(
+                child: Image.asset(
+                  'assets/images/smart_cast_logo.png',
                   width: 100,
                   height: 100,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.favorite,
-                      color: AppColors.white,
-                      size: 50,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.favorite,
+                        color: AppColors.white,
+                        size: 50,
+                      ),
                     ),
                   ),
                 ),

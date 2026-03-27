@@ -1,46 +1,54 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'package:smartcast/src/domain/entities/user.dart';
 
-part 'user_model.g.dart';
-
-@JsonSerializable()
 class UserModel extends User {
+  final String? token;
+
   const UserModel({
-    required super.id,
-    required super.email,
-    required super.fullName,
-    super.phone,
-    super.avatar,
-    required super.createdAt,
-    super.updatedAt,
-  });
+    required String id,
+    required String email,
+    required String fullName,
+    String? phone,
+    String? avatar,
+    required DateTime createdAt,
+    DateTime? updatedAt,
+    this.token,
+  }) : super(
+          id: id,
+          email: email,
+          fullName: fullName,
+          phone: phone,
+          avatar: avatar,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
+        );
 
-  factory UserModel.fromJson(Map<String, dynamic> json) =>
-      _$UserModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$UserModelToJson(this);
-
-  factory UserModel.fromEntity(User user) {
+  factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: user.id,
-      email: user.email,
-      fullName: user.fullName,
-      phone: user.phone,
-      avatar: user.avatar,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+      id: json['id'],
+      email: json['email'],
+      fullName: json['fullName'],
+      phone: json['phone'],
+      avatar: json['avatar'],
+      createdAt: json['createdAt'] != null 
+          ? DateTime.parse(json['createdAt']) 
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null 
+          ? DateTime.parse(json['updatedAt']) 
+          : null,
+      token: json['token'],
     );
   }
 
-  User toEntity() {
-    return User(
-      id: id,
-      email: email,
-      fullName: fullName,
-      phone: phone,
-      avatar: avatar,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
-    );
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'fullName': fullName,
+      'phone': phone,
+      'avatar': avatar,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
+      'token': token,
+    };
   }
 }

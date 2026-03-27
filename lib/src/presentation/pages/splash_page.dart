@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:smartcast/src/config/localization/app_localizations.dart';
-import 'package:smartcast/src/core/constants/app_colors.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smartcast/src/config/routes/app_routes.dart';
 
 class SplashPage extends StatefulWidget {
-  const SplashPage({Key? key}) : super(key: key);
+  const SplashPage({super.key});
 
   @override
   State<SplashPage> createState() => _SplashPageState();
@@ -17,10 +17,9 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void _navigateToNextPage() {
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        // Force navigation to onboarding to verify the new screens
-        Navigator.of(context).pushReplacementNamed('/onboarding');
+        Navigator.of(context).pushReplacementNamed(AppRoutes.onboarding);
       }
     });
   }
@@ -28,38 +27,68 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Logo
-            Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: const Center(
-                child: Icon(Icons.favorite, color: AppColors.white, size: 60),
+      body: Stack(
+        children: [
+          // Background Image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/LoadingScreen.jpg',
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                color: Colors.white,
+                child: const Center(child: Icon(Icons.image_not_supported, size: 50, color: Colors.grey)),
               ),
             ),
-            const SizedBox(height: 24),
-            Text(
-              AppLocalizations.of(context).appName,
-              style: Theme.of(context).textTheme.displaySmall,
+          ),
+          // Content Overlay
+          SafeArea(
+            child: Column(
+              children: [
+                const SizedBox(height: 60),
+                // "SmartCast" Text (from SVG)
+                Text(
+                  'SmartCast',
+                  style: GoogleFonts.inter(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF105EEE),
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Logo / Loading circles (Approximating the SVG shapes)
+                Center(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Outer Grey-ish Circle
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: const Color(0xFFAEAEB2),
+                            width: 3,
+                          ),
+                        ),
+                      ),
+                      // Inner Blue Loading Indicator
+                      const SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3,
+                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF0088FF)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
-            Text(
-              AppLocalizations.of(context).appSubtitle,
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 60),
-            const CircularProgressIndicator(color: AppColors.primary),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

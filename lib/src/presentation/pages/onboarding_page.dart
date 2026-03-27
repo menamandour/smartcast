@@ -1,126 +1,129 @@
 import 'package:flutter/material.dart';
-import 'package:smartcast/src/config/localization/app_localizations.dart';
-import 'package:smartcast/src/core/constants/app_colors.dart';
-import 'package:smartcast/src/presentation/pages/login_page.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smartcast/src/config/routes/app_routes.dart';
 
 class OnboardingPage extends StatefulWidget {
-  const OnboardingPage({Key? key}) : super(key: key);
+  const OnboardingPage({super.key});
 
   @override
   State<OnboardingPage> createState() => _OnboardingPageState();
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
-  late PageController _pageController;
+  final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController();
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
+  final List<OnboardingData> _onboardingScreens = [
+    OnboardingData(
+      title: "Welcome to SmartCast",
+      description: "SmartCast simplifies cast management for you and your healthcare team",
+      image: "assets/images/page1Image.jpg",
+    ),
+    OnboardingData(
+      title: "Real-Time Monitoring",
+      description: "Keep track of your cast's condition and receive alerts for any issues",
+      image: "assets/images/page2image.jpg",
+    ),
+    OnboardingData(
+      title: "Stay Connected",
+      description: "Easily share data with your doctor for better recovery and care",
+      image: "assets/images/page3image.jpg",
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context);
-    final screens = [
-      _buildOnboardingScreen(
-        title: loc.monitorYourHealing,
-        description: loc.attachSmartSensor,
-        icon: Icons.favorite_border,
-      ),
-      _buildOnboardingScreen(
-        title: loc.captureOrConnect,
-        description: loc.captureOrConnect,
-        icon: Icons.sensors,
-      ),
-      _buildOnboardingScreen(
-        title: loc.welcome,
-        description: loc.welcomeSubtitle,
-        icon: Icons.check_circle_outline,
-        isLast: true,
-      ),
-    ];
-
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
-          PageView(
+          PageView.builder(
             controller: _pageController,
-            onPageChanged: (value) {
-              setState(() => _currentPage = value);
+            onPageChanged: (index) {
+              setState(() {
+                _currentPage = index;
+              });
             },
-            children: screens,
+            itemCount: _onboardingScreens.length,
+            itemBuilder: (context, index) {
+              return _buildPage(_onboardingScreens[index]);
+            },
           ),
+          // Navigation & Indicators
           Positioned(
-            bottom: 60,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(3, (index) {
-                  return Container(
-                    width: _currentPage == index ? 32 : 8,
-                    height: 8,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      color: _currentPage == index
-                          ? AppColors.primary
-                          : AppColors.greyLight,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  );
-                }),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 20,
-            left: 20,
-            right: 20,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            bottom: 40,
+            left: 31,
+            right: 31,
+            child: Column(
               children: [
-                ElevatedButton.icon(
-                  onPressed: () => Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (_) => const LoginPage()),
-                  ),
-                  icon: const Icon(Icons.arrow_back),
-                  label: Text(loc.skip),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.white,
-                    foregroundColor: AppColors.primary,
-                    side: const BorderSide(color: AppColors.primary),
+                // Dots
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    _onboardingScreens.length,
+                    (index) => _buildDot(index),
                   ),
                 ),
-                if (_currentPage == 2)
-                  ElevatedButton(
-                    onPressed: () =>
-                        Navigator.of(context).pushReplacementNamed('/login'),
-                    child: Text(loc.getStarted),
+                const SizedBox(height: 40),
+                // Primary Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 65,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_currentPage == _onboardingScreens.length - 1) {
+                        Navigator.of(context).pushReplacementNamed(AppRoutes.welcome);
+                      } else {
+                        _pageController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF105EEE),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      _currentPage == _onboardingScreens.length - 1 ? "Get Started" : "Next",
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    if (_currentPage == 2) {
-                      Navigator.of(context).pushReplacementNamed('/login');
-                    } else {
-                      _pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.ease,
-                      );
-                    }
-                  },
-                  label: Text(_currentPage == 2 ? loc.getStarted : loc.next),
-                  icon: const Icon(Icons.arrow_forward),
                 ),
+                const SizedBox(height: 15),
+                // Secondary Button / Skip
+                if (_currentPage != _onboardingScreens.length - 1)
+                  SizedBox(
+                    width: double.infinity,
+                    height: 65,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pushReplacementNamed(AppRoutes.welcome);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFAEAEB2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        "Skip",
+                        style: GoogleFonts.inter(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -129,32 +132,90 @@ class _OnboardingPageState extends State<OnboardingPage> {
     );
   }
 
-  Widget _buildOnboardingScreen({
-    required String title,
-    required String description,
-    required IconData icon,
-    bool isLast = false,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 120, color: AppColors.primary),
-          const SizedBox(height: 32),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.displaySmall,
-            textAlign: TextAlign.center,
+  Widget _buildPage(OnboardingData data) {
+    return Column(
+      children: [
+        // Image with curved bottom
+        ClipPath(
+          clipper: CustomBottomClipper(),
+          child: Container(
+            height: 405,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: Color(0xFFF2F2F7),
+            ),
+            child: Image.asset(
+              data.image,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.image, size: 100, color: Colors.grey)),
+            ),
           ),
-          const SizedBox(height: 16),
-          Text(
-            description,
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 60),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 31),
+          child: Column(
+            children: [
+              Text(
+                data.title,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                data.description,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xFF8E8E93),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDot(int index) {
+    return Container(
+      margin: const EdgeInsets.only(right: 15),
+      height: 12,
+      width: 13,
+      decoration: BoxDecoration(
+        color: _currentPage == index ? const Color(0xFF105EEE) : const Color(0xFF92979F),
+        shape: BoxShape.circle,
       ),
     );
   }
+}
+
+class OnboardingData {
+  final String title;
+  final String description;
+  final String image;
+
+  OnboardingData({required this.title, required this.description, required this.image});
+}
+
+class CustomBottomClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(0, 350);
+    path.quadraticBezierTo(0, 405, 55, 405);
+    path.lineTo(size.width - 55, 405);
+    path.quadraticBezierTo(size.width, 405, size.width, 350);
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

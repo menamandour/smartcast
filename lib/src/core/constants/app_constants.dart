@@ -1,4 +1,7 @@
 class AppConstants {
+  // Toggle for Mock API vs Real API
+  static const bool useRealApi = false; // Set to true to send actual data to the API, false for predefined mock data
+
   // API Configuration
   static const String baseUrl = 'https://api.smartcast.com/api';
   static const String apiVersion = 'v1';

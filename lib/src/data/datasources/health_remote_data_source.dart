@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:smartcast/src/core/constants/app_constants.dart';
 import 'package:smartcast/src/core/errors/exceptions.dart';
 import 'package:smartcast/src/data/models/health_data_model.dart';
 
@@ -34,6 +35,19 @@ class HealthRemoteDataSourceImpl implements HealthRemoteDataSource {
     required double circulation,
     required double movementTracking,
   }) async {
+    if (!AppConstants.useRealApi) {
+      await Future.delayed(const Duration(milliseconds: 800));
+      return HealthDataModel(
+        id: "mock_data_${DateTime.now().millisecondsSinceEpoch}",
+        userId: userId,
+        pressure: pressure,
+        temperature: temperature,
+        circulation: circulation,
+        movementTracking: movementTracking,
+        recordedAt: DateTime.now(),
+      );
+    }
+
     try {
       final response = await dio.post(
         '/health/record',
@@ -66,6 +80,22 @@ class HealthRemoteDataSourceImpl implements HealthRemoteDataSource {
     required String userId,
     int limit = 30,
   }) async {
+    if (!AppConstants.useRealApi) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      final now = DateTime.now();
+      return List.generate(10, (index) {
+        return HealthDataModel(
+          id: "mock_history_$index",
+          userId: userId,
+          pressure: 120.0 + index,
+          temperature: 36.5 + (index * 0.1),
+          circulation: 95.0 + (index % 5),
+          movementTracking: 500.0 * index,
+          recordedAt: now.subtract(Duration(hours: index)),
+        );
+      });
+    }
+
     try {
       final response = await dio.get(
         '/health/history',
@@ -91,6 +121,19 @@ class HealthRemoteDataSourceImpl implements HealthRemoteDataSource {
 
   @override
   Future<HealthDataModel?> getLatestHealthData({required String userId}) async {
+    if (!AppConstants.useRealApi) {
+      await Future.delayed(const Duration(milliseconds: 300));
+      return HealthDataModel(
+        id: "mock_latest",
+        userId: userId,
+        pressure: 120.0,
+        temperature: 36.6,
+        circulation: 98.0,
+        movementTracking: 1250.0,
+        recordedAt: DateTime.now().subtract(const Duration(minutes: 15)),
+      );
+    }
+
     try {
       final response = await dio.get(
         '/health/latest',
@@ -110,6 +153,8 @@ class HealthRemoteDataSourceImpl implements HealthRemoteDataSource {
 
   @override
   Future<void> deleteHealthData({required String healthDataId}) async {
+    if (!AppConstants.useRealApi) return;
+
     try {
       final response = await dio.delete('/health/$healthDataId');
 

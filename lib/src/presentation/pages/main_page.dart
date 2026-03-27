@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smartcast/src/core/constants/app_colors.dart';
 import 'package:smartcast/src/presentation/pages/home_page.dart';
-import 'package:smartcast/src/presentation/pages/health_monitoring_page.dart';
-import 'package:smartcast/src/presentation/pages/smart_home_dashboard.dart';
+import 'package:smartcast/src/presentation/pages/sensors_page.dart';
+import 'package:smartcast/src/presentation/pages/profile_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -16,9 +16,9 @@ class _MainPageState extends State<MainPage> {
 
   final List<Widget> _pages = [
     const HomePage(),
-    const SmartHomeDashboard(),
-    const HealthMonitoringPage(),
-    const Center(child: Text('Profile & Settings')),
+    const SensorsPage(),
+    const Center(child: Text('Alerts Page')),
+    const ProfilePage(),
   ];
 
   @override
@@ -35,14 +35,26 @@ class _MainPageState extends State<MainPage> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: AppColors.primary,
         unselectedItemColor: Colors.grey,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.smart_toy),
-            label: 'Smart Home',
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Home',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Health'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sensors),
+            label: 'Sensors',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications_active_outlined),
+            label: 'Alerts',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: 'profile',
+          ),
         ],
       ),
     );
