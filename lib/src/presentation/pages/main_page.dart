@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:smartcast/src/config/localization/app_localizations.dart';
 import 'package:smartcast/src/core/constants/app_colors.dart';
 import 'package:smartcast/src/presentation/pages/home_page.dart';
 import 'package:smartcast/src/presentation/pages/sensors_page.dart';
 import 'package:smartcast/src/presentation/pages/profile_page.dart';
+import 'package:smartcast/src/presentation/pages/alerts_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -17,12 +19,14 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> _pages = [
     const HomePage(),
     const SensorsPage(),
-    const Center(child: Text('Alerts Page')),
+    const AlertsPage(),
     const ProfilePage(),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
+
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -36,24 +40,25 @@ class _MainPageState extends State<MainPage> {
         selectedItemColor: AppColors.primary,
         unselectedItemColor: Colors.grey,
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Home',
+            icon: const Icon(Icons.home_outlined),
+            activeIcon: const Icon(Icons.home),
+            label: loc.navHome,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.sensors),
-            label: 'Sensors',
+            icon: const Icon(Icons.sensors),
+            label: loc.navSensors,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications_active_outlined),
-            label: 'Alerts',
+            icon: const Icon(Icons.notifications_active_outlined),
+            activeIcon: const Icon(Icons.notifications_active),
+            label: loc.navAlerts,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'profile',
+            icon: const Icon(Icons.person_outline),
+            activeIcon: const Icon(Icons.person),
+            label: loc.navProfile,
           ),
         ],
       ),

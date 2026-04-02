@@ -4,6 +4,7 @@ import 'package:smartcast/src/config/localization/app_localizations.dart';
 import 'package:smartcast/src/core/constants/app_colors.dart';
 import 'package:smartcast/src/presentation/bloc/auth_bloc.dart';
 import 'package:smartcast/src/presentation/pages/register_page.dart';
+import 'package:smartcast/src/core/providers/locale_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -51,9 +52,21 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
 
     return Scaffold(
-      appBar: AppBar(elevation: 0, backgroundColor: Colors.transparent),
+      backgroundColor: Colors.white,
+      drawer: _buildAuthDrawer(loc, isAr),
+      appBar: AppBar(
+        elevation: 0, 
+        backgroundColor: Colors.transparent,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu, color: Colors.grey, size: 32),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+      ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticatedState) {
@@ -65,9 +78,9 @@ class _LoginPageState extends State<LoginPage> {
           }
         },
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               // Logo
               Center(
@@ -117,6 +130,7 @@ class _LoginPageState extends State<LoginPage> {
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
+                textAlign: isAr ? TextAlign.right : TextAlign.left,
                 decoration: InputDecoration(
                   hintText: 'example@email.com',
                   suffixIcon: const Icon(Icons.check, color: AppColors.success),
@@ -130,6 +144,7 @@ class _LoginPageState extends State<LoginPage> {
               TextField(
                 controller: _passwordController,
                 obscureText: _obscurePassword,
+                textAlign: isAr ? TextAlign.right : TextAlign.left,
                 decoration: InputDecoration(
                   hintText: '••••••••',
                   suffixIcon: IconButton(
@@ -226,9 +241,78 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
+              const SizedBox(height: 40),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildAuthDrawer(AppLocalizations loc, bool isAr) {
+    return Drawer(
+      child: Container(
+        color: const Color(0xFFB9C6D9).withOpacity(0.5),
+        padding: const EdgeInsets.all(24),
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [
+              Text(
+                loc.translate('drawer.select'),
+                style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 32),
+              
+              _buildDrawerExpansionTile(
+                title: loc.translate('drawer.changeLanguage'),
+                isAr: isAr,
+                children: [
+                   ListTile(
+                    title: const Text('English'),
+                    onTap: () => localeProvider.setLocale(const Locale('en')),
+                  ),
+                  ListTile(
+                    title: const Text('العربية'),
+                    onTap: () => localeProvider.setLocale(const Locale('ar')),
+                  ),
+                ],
+              ),
+              _buildDrawerExpansionTile(
+                title: loc.translate('drawer.changeFont'),
+                isAr: isAr,
+                children: const [
+                  ListTile(title: Text('Default')),
+                  ListTile(title: Text('Serif')),
+                ],
+              ),
+              _buildDrawerExpansionTile(
+                title: loc.translate('drawer.brightnessLevel'),
+                isAr: isAr,
+                children: const [
+                  ListTile(title: Text('Light')),
+                  ListTile(title: Text('Dark')),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerExpansionTile({required String title, required bool isAr, required List<Widget> children}) {
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        tilePadding: EdgeInsets.zero,
+        title: Text(
+          title,
+          textAlign: isAr ? TextAlign.right : TextAlign.left,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        trailing: const Icon(Icons.arrow_drop_down, color: Colors.black),
+        children: children,
       ),
     );
   }

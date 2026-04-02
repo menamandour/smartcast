@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartcast/src/config/localization/app_localizations.dart';
+import 'package:smartcast/src/config/routes/app_routes.dart';
 import 'package:smartcast/src/core/constants/app_colors.dart';
 import 'package:smartcast/src/presentation/bloc/auth_bloc.dart';
 import 'package:smartcast/src/presentation/bloc/health_bloc.dart';
@@ -191,10 +192,13 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             const Divider(color: Colors.white12, height: 40),
-            _buildDrawerItem(loc.home, Icons.home_outlined, isAr),
+            _buildDrawerItem(loc.home, Icons.home_outlined, isAr, onTap: () => Navigator.of(context).pop()),
             _buildDrawerItem(loc.analytics, Icons.bar_chart, isAr),
             _buildDrawerItem(loc.patients, Icons.person_outline, isAr),
-            _buildDrawerItem(loc.devices, Icons.settings_input_component_outlined, isAr),
+            _buildDrawerItem(loc.devices, Icons.settings_input_component_outlined, isAr, onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(AppRoutes.devices);
+            }),
             _buildDrawerItem(loc.settings, Icons.settings_outlined, isAr),
             const Spacer(),
             _buildDrawerItem(loc.logout, Icons.logout, isAr, onTap: () {

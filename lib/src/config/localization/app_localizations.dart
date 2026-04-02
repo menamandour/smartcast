@@ -56,6 +56,7 @@ class AppLocalizations {
   String get normal => translate('common.normal');
   String get high => translate('common.high');
   String get low => translate('common.low');
+  String get viewAll => translate('common.viewAll');
 
   // Auth
   String get email => translate('auth.email');
@@ -142,12 +143,47 @@ class AppLocalizations {
   String get patients => translate('drawer.patients');
   String get devices => translate('drawer.devices');
   String get settings => translate('drawer.settings');
+  String get select => translate('drawer.select');
+  String get changeLanguage => translate('drawer.changeLanguage');
+  String get changeFont => translate('drawer.changeFont');
+  String get brightnessLevel => translate('drawer.brightnessLevel');
 
   // Navigation
   String get navHome => translate('nav.home');
   String get navSensors => translate('nav.sensors');
   String get navAlerts => translate('nav.alerts');
   String get navProfile => translate('nav.profile');
+
+  // Alerts
+  String get alerts => translate('alerts.alerts');
+  String get todayAlerts => translate('alerts.todayAlerts');
+  String get highPressure => translate('alerts.highPressure');
+  String get feverDetected => translate('alerts.feverDetected');
+  String get humidityIsHigh => translate('alerts.humidityIsHigh');
+  String get pressureIsRising => translate('alerts.pressureIsRising');
+  String get tempAbove37 => translate('alerts.tempAbove37');
+  String get humidityAlert => translate('alerts.humidityAlert');
+  String get minAgo => translate('alerts.minAgo');
+  String get hrAgo => translate('alerts.hrAgo');
+
+  // Doctor Messages
+  String get doctorMessages => translate('messages.doctorMessages');
+  String get typeYourMessage => translate('messages.typeYourMessage');
+  String get drAhmed => translate('messages.drAhmed');
+  String get drOmar => translate('messages.drOmar');
+  String get keepLegElevated => translate('messages.keepLegElevated');
+  String get nextCheckupOnFri => translate('messages.nextCheckupOnFri');
+
+  // Devices
+  String get connectCast => translate('devices.connectCast');
+  String get nearbyBluetoothDevice => translate('devices.nearbyBluetoothDevice');
+  String get bluetoothDevices => translate('devices.bluetoothDevices');
+  String get bluetooth => translate('devices.bluetooth');
+  String get connected => translate('devices.connected');
+  String get disconnected => translate('devices.disconnected');
+  String get castIdLabel => translate('devices.castIdLabel');
+  String get batteryLabel => translate('devices.batteryLabel');
+  String get searchingForDevice => translate('devices.searchingForDevice');
 
   Map<String, dynamic> _getEnglishTranslations() {
     return {
@@ -172,6 +208,7 @@ class AppLocalizations {
         'normal': 'Normal',
         'high': 'High',
         'low': 'Low',
+        'viewAll': 'View All',
       },
       'auth': {
         'email': 'Email',
@@ -258,12 +295,47 @@ class AppLocalizations {
         'patients': 'Patients',
         'devices': 'Devices',
         'settings': 'Settings',
+        'select': 'Select',
+        'changeLanguage': 'Change Language',
+        'changeFont': 'Change Font',
+        'brightnessLevel': 'Brightness Level',
       },
       'nav': {
         'home': 'Home',
         'sensors': 'Sensors',
         'alerts': 'Alerts',
         'profile': 'profile',
+      },
+      'alerts': {
+        'alerts': 'Alerts',
+        'todayAlerts': 'Today’s Alerts',
+        'highPressure': 'High Pressure!',
+        'feverDetected': 'Fever Detected!',
+        'humidityIsHigh': 'Humidity is High',
+        'pressureIsRising': 'Pressure is rising',
+        'tempAbove37': 'Temp above 37 °C',
+        'humidityAlert': 'Humidity Alert',
+        'minAgo': 'min ago',
+        'hrAgo': 'hr ago',
+      },
+      'messages': {
+        'doctorMessages': 'Doctor Messages',
+        'typeYourMessage': 'Type your message...',
+        'drAhmed': 'Dr. Ahmed',
+        'drOmar': 'Dr. Omar',
+        'keepLegElevated': 'Keep leg elevated & dry.',
+        'nextCheckupOnFri': 'Next checkup on fri.',
+      },
+      'devices': {
+        'connectCast': 'Connect Cast',
+        'nearbyBluetoothDevice': 'Nearby Bluetooth device',
+        'bluetoothDevices': 'Bluetooth devices',
+        'bluetooth': 'Bluetooth',
+        'connected': 'Connected',
+        'disconnected': 'Disconnected',
+        'castIdLabel': 'Cast ID',
+        'batteryLabel': 'Battery',
+        'searchingForDevice': 'Searching for device...',
       }
     };
   }
@@ -291,6 +363,7 @@ class AppLocalizations {
         'normal': 'طبيعي',
         'high': 'مرتفع',
         'low': 'منخفض',
+        'viewAll': 'عرض الكل',
       },
       'auth': {
         'email': 'البريد الإلكتروني',
@@ -377,12 +450,47 @@ class AppLocalizations {
         'patients': 'المرضى',
         'devices': 'الأجهزة',
         'settings': 'الإعدادات',
+        'select': 'اختر',
+        'changeLanguage': 'تغيير اللغة',
+        'changeFont': 'تغيير الخط',
+        'brightnessLevel': 'درجة السطوع',
       },
       'nav': {
         'home': 'الرئيسية',
         'sensors': 'الحساسات',
         'alerts': 'التنبيهات',
         'profile': 'ملفي',
+      },
+      'alerts': {
+        'alerts': 'التنبيهات',
+        'todayAlerts': 'تنبيهات اليوم',
+        'highPressure': 'ضغط مرتفع!',
+        'feverDetected': 'تم اكتشاف حمى!',
+        'humidityIsHigh': 'الرطوبة مرتفعة',
+        'pressureIsRising': 'الضغط يرتفع',
+        'tempAbove37': 'الحرارة فوق ٣٧ درجة',
+        'humidityAlert': 'تنبيه الرطوبة',
+        'minAgo': 'دقيقة مضت',
+        'hrAgo': 'ساعة مضت',
+      },
+      'messages': {
+        'doctorMessages': 'رسائل الطبيب',
+        'typeYourMessage': 'اكتب رسالتك...',
+        'drAhmed': 'د. أحمد',
+        'drOmar': 'د. عمر',
+        'keepLegElevated': 'حافظ على رفع الساق وجفافها.',
+        'nextCheckupOnFri': 'الفحص القادم يوم الجمعة.',
+      },
+      'devices': {
+        'connectCast': 'توصيل الجبيرة',
+        'nearbyBluetoothDevice': 'أجهزة بلوتوث قريبة',
+        'bluetoothDevices': 'أجهزة بلوتوث',
+        'bluetooth': 'بلوتوث',
+        'connected': 'متصل',
+        'disconnected': 'غير متصل',
+        'castIdLabel': 'معرف الجبيرة',
+        'batteryLabel': 'البطارية',
+        'searchingForDevice': 'جاري البحث عن جهاز...',
       }
     };
   }

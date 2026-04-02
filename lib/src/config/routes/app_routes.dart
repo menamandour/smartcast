@@ -7,12 +7,8 @@ import 'package:smartcast/src/presentation/pages/onboarding_page.dart';
 import 'package:smartcast/src/presentation/pages/register_page.dart';
 import 'package:smartcast/src/presentation/pages/splash_page.dart';
 import 'package:smartcast/src/presentation/pages/welcome_page.dart';
-import 'package:smartcast/src/presentation/pages/page1.dart';
-import 'package:smartcast/src/presentation/pages/page2.dart';
-import 'package:smartcast/src/presentation/pages/page3.dart';
-import 'package:smartcast/src/presentation/pages/page4.dart';
-import 'package:smartcast/src/presentation/pages/page5.dart';
-import 'package:smartcast/src/presentation/pages/page6.dart';
+import 'package:smartcast/src/presentation/pages/devices_page.dart';
+import 'package:smartcast/src/presentation/pages/bluetooth_details_page.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -23,12 +19,8 @@ class AppRoutes {
   static const String home = '/home';
   static const String health = '/health';
   static const String welcome = '/welcome';
-  static const String page1 = '/page1';
-  static const String page2 = '/page2';
-  static const String page3 = '/page3';
-  static const String page4 = '/page4';
-  static const String page5 = '/page5';
-  static const String page6 = '/page6';
+  static const String devices = '/devices';
+  static const String bluetoothDetails = '/bluetooth-details';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
@@ -39,13 +31,9 @@ class AppRoutes {
       register: (context) => const RegisterPage(),
       home: (context) => const MainPage(),
       health: (context) => const HealthMonitoringPage(),
-      welcome: (context) => WelcomePage(),
-      page1: (context) => Page1(),
-      page2: (context) => Page2(),
-      page3: (context) => Page3(),
-      page4: (context) => Page4(),
-      page5: (context) => Page5(),
-      page6: (context) => Page6(),
+      welcome: (context) => const WelcomePage(),
+      devices: (context) => const DevicesPage(),
+      bluetoothDetails: (context) => const BluetoothDetailsPage(),
     };
   }
 }
