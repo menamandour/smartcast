@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smartcast/src/config/localization/app_localizations.dart';
 import 'package:smartcast/src/config/routes/app_routes.dart';
 
 class SetNewPasswordPage extends StatefulWidget {
@@ -24,7 +25,10 @@ class _SetNewPasswordPageState extends State<SetNewPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    const Color buttonColor = Color(0xFFAFA5A3);
+    final loc = AppLocalizations.of(context);
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+
+    const Color activeBtnColor = Color(0xFF10531A);
     const Color inputBackgroundColor = Color(0xFFD6D6D6);
 
     return Scaffold(
@@ -33,12 +37,12 @@ class _SetNewPasswordPageState extends State<SetNewPasswordPage> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(isAr ? Icons.arrow_forward : Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Set a new password',
-          style: TextStyle(
+        title: Text(
+          loc.setNewPasswordTitle,
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 22,
@@ -50,21 +54,22 @@ class _SetNewPasswordPageState extends State<SetNewPasswordPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              const Text(
-                'Create a new password. Ensure it differs from previous ones for security',
-                style: TextStyle(
+              Text(
+                loc.setNewPasswordSubtitle,
+                textAlign: isAr ? TextAlign.right : TextAlign.left,
+                style: const TextStyle(
                   fontSize: 16,
                   color: Colors.black,
                   height: 1.4,
                 ),
               ),
               const SizedBox(height: 40),
-              const Text(
-                'Password',
-                style: TextStyle(
+              Text(
+                loc.password,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -74,8 +79,9 @@ class _SetNewPasswordPageState extends State<SetNewPasswordPage> {
               TextField(
                 controller: _passwordController,
                 obscureText: _obscurePassword,
+                textAlign: isAr ? TextAlign.right : TextAlign.left,
                 decoration: InputDecoration(
-                  hintText: 'Enter your new password',
+                  hintText: loc.enterNewPassword,
                   hintStyle: TextStyle(color: Colors.grey.shade600),
                   filled: true,
                   fillColor: inputBackgroundColor,
@@ -103,9 +109,9 @@ class _SetNewPasswordPageState extends State<SetNewPasswordPage> {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Confirm Password',
-                style: TextStyle(
+              Text(
+                loc.confirmPassword,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -115,8 +121,9 @@ class _SetNewPasswordPageState extends State<SetNewPasswordPage> {
               TextField(
                 controller: _confirmPasswordController,
                 obscureText: _obscureConfirmPassword,
+                textAlign: isAr ? TextAlign.right : TextAlign.left,
                 decoration: InputDecoration(
-                  hintText: 'Re-enter password',
+                  hintText: loc.reEnterPassword,
                   hintStyle: TextStyle(color: Colors.grey.shade600),
                   filled: true,
                   fillColor: inputBackgroundColor,
@@ -157,15 +164,15 @@ class _SetNewPasswordPageState extends State<SetNewPasswordPage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: buttonColor,
+                    backgroundColor: activeBtnColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Update Password',
-                    style: TextStyle(
+                  child: Text(
+                    loc.updatePassword,
+                    style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,
                       fontWeight: FontWeight.w500,

@@ -57,6 +57,7 @@ class AppLocalizations {
   String get high => translate('common.high');
   String get low => translate('common.low');
   String get viewAll => translate('common.viewAll');
+  String get submit => translate('common.submit');
 
   // Auth
   String get email => translate('auth.email');
@@ -73,6 +74,19 @@ class AppLocalizations {
   String get loginSuccess => translate('auth.loginSuccess');
   String get signUpSuccess => translate('auth.signUpSuccess');
   String get logoutSuccess => translate('auth.logoutSuccess');
+  String get forgotPasswordSubtitle => translate('auth.forgotPasswordSubtitle');
+  String get emailHint => translate('auth.emailHint');
+  String get verificationEmail => translate('auth.verificationEmail');
+  String get otpSubtitle => translate('auth.otpSubtitle');
+  String get didntReceiveCode => translate('auth.didntReceiveCode');
+  String get resend => translate('auth.resend');
+  String get verify => translate('auth.verify');
+  String get setNewPasswordTitle => translate('auth.setNewPasswordTitle');
+  String get setNewPasswordSubtitle => translate('auth.setNewPasswordSubtitle');
+  String get enterNewPassword => translate('auth.enterNewPassword');
+  String get reEnterPassword => translate('auth.reEnterPassword');
+  String get updatePassword => translate('auth.updatePassword');
+  String get registerSubtitle => translate('auth.registerSubtitle');
 
   // Validation
   String get emailRequired => translate('validation.emailRequired');
@@ -119,11 +133,7 @@ class AppLocalizations {
   String get month => translate('health.month');
 
   // Onboarding
-  String get welcome => translate('onboarding.welcome');
-  String get welcomeSubtitle => translate('onboarding.welcomeSubtitle');
-  String get monitorYourHealing => translate('onboarding.monitorYourHealing');
-  String get captureOrConnect => translate('onboarding.captureOrConnect');
-  String get getStarted => translate('onboarding.getStarted');
+  String get onboardingGetStarted => translate('onboarding.getStarted');
 
   // Profile
   String get profile => translate('profile.profile');
@@ -209,6 +219,7 @@ class AppLocalizations {
         'high': 'High',
         'low': 'Low',
         'viewAll': 'View All',
+        'submit': 'Submit',
       },
       'auth': {
         'email': 'Email',
@@ -225,6 +236,19 @@ class AppLocalizations {
         'loginSuccess': 'Login successful',
         'signUpSuccess': 'Account created successfully',
         'logoutSuccess': 'Logged out successfully',
+        'forgotPasswordSubtitle': 'Don\'t worry! it happens. please enter the email associated with your account',
+        'emailHint': 'Enter your email',
+        'verificationEmail': 'Verification Email',
+        'otpSubtitle': 'Please enter the code we just sent to email',
+        'didntReceiveCode': 'If you didn\'t receive a code? ',
+        'resend': 'Resend',
+        'verify': 'Verify',
+        'setNewPasswordTitle': 'Set a new password',
+        'setNewPasswordSubtitle': 'Create a new password. Ensure it differs from previous ones for security',
+        'enterNewPassword': 'Enter your new password',
+        'reEnterPassword': 'Re-enter password',
+        'updatePassword': 'Update Password',
+        'registerSubtitle': 'Join us to manage your smart cast',
       },
       'validation': {
         'emailRequired': 'Email is required',
@@ -271,10 +295,12 @@ class AppLocalizations {
         'month': 'Month',
       },
       'onboarding': {
-        'welcome': 'Welcome to SmartCast',
-        'welcomeSubtitle': 'Smart Cast Health Monitoring System',
-        'monitorYourHealing': 'Monitor Your Healing Vital Signs',
-        'captureOrConnect': 'Capture or connect your smart cast, and we\'ll track pressure levels, swelling indicators, and healing progress in real time to ensure safe recovery.',
+        'screen1Title': 'Welcome to Smart Vital Cast: \n Monitor Your Cast Health Instantly',
+        'screen1Subtitle': 'Capture or connect your smart cast, and we’ll track pressure levels, swelling indicators, and healing progress in real time to ensure safe recovery.',
+        'screen2Title': 'Automate Recovery Monitoring',
+        'screen2Subtitle': 'Set personalized recovery settings that adapt to your injury condition. Just select your comfort level, and let the smart system handle continuous monitoring and alerts!',
+        'screen3Title': 'Monitor Your Healing Vital Signs',
+        'screen3Subtitle': 'Attach the smart sensor to your cast to receive real-time data on pressure, temperature, circulation indicators, and movement tracking — ensuring optimal healing and preventing complications.',
         'getStarted': 'Get Started',
       },
       'profile': {
@@ -364,6 +390,7 @@ class AppLocalizations {
         'high': 'مرتفع',
         'low': 'منخفض',
         'viewAll': 'عرض الكل',
+        'submit': 'إرسال',
       },
       'auth': {
         'email': 'البريد الإلكتروني',
@@ -380,6 +407,19 @@ class AppLocalizations {
         'loginSuccess': 'تم تسجيل الدخول بنجاح',
         'signUpSuccess': 'تم إنشاء الحساب بنجاح',
         'logoutSuccess': 'تم تسجيل الخروج بنجاح',
+        'forgotPasswordSubtitle': 'لا تقلق! يحدث هذا. يرجى إدخال البريد الإلكتروني المرتبط بحسابك',
+        'emailHint': 'أدخل بريدك الإلكتروني',
+        'verificationEmail': 'بريد التحقق',
+        'otpSubtitle': 'يرجى إدخال الكود الذي أرسلناه للتو إلى البريد الإلكتروني',
+        'didntReceiveCode': 'إذا لم تستلم الكود؟ ',
+        'resend': 'إعادة إرسال',
+        'verify': 'تحقق',
+        'setNewPasswordTitle': 'تعيين كلمة مرور جديدة',
+        'setNewPasswordSubtitle': 'قم بإنشاء كلمة مرور جديدة. تأكد من أنها تختلف عن الكلمات السابقة للأمان',
+        'enterNewPassword': 'أدخل كلمة المرور الجديدة',
+        'reEnterPassword': 'أعد إدخال كلمة المرور',
+        'updatePassword': 'تحديث كلمة المرور',
+        'registerSubtitle': 'انضم إلينا لإدارة جبيرتك الذكية',
       },
       'validation': {
         'emailRequired': 'البريد الإلكتروني مطلوب',
@@ -426,10 +466,12 @@ class AppLocalizations {
         'month': 'شهر',
       },
       'onboarding': {
-        'welcome': 'مرحباً بك في سمارت كاست',
-        'welcomeSubtitle': 'نظام مراقبة الجبيرة الذكية',
-        'monitorYourHealing': 'راقب علاماتك الحيوية أثناء الشفاء',
-        'captureOrConnect': 'قم بتصوير أو توصيل جبيرتك الذكية، وسنقوم بتتبع مستويات الضغط ومؤشرات التورم وتقدم الشفاء في الوقت الفعلي لضمان التعافي الآمن.',
+        'screen1Title': 'مرحبًا بك في سمارت فيتال كاست: \n راقب صحة جبيرتك فورًا',
+        'screen1Subtitle': 'قم بتصوير أو توصيل جبيرتك الذكية، وسنقوم بتتبع مستويات الضغط ومؤشرات التورم وتقدم الشفاء في الوقت الفعلي لضمان التعافي الآمن.',
+        'screen2Title': 'أتمتة مراقبة التعافي',
+        'screen2Subtitle': 'قم بضبط إعدادات التعافي الشخصية التي تتكيف مع حالة إصابتك. ما عليك سوى اختيار مستوى راحتك، ودع النظام الذكي يتولى المراقبة والتنبيهات المستمرة!',
+        'screen3Title': 'راقب علاماتك الحيوية أثناء الشفاء',
+        'screen3Subtitle': 'قم بتوصيل المستشعر الذكي بجبيرتك لتلقي بيانات فورية عن الضغط ودرجة الحرارة ومؤشرات الدورة الدموية وتتبع الحركة - لضمان الشفاء الأمثل ومنع المضاعفات.',
         'getStarted': 'ابدأ الآن',
       },
       'profile': {
@@ -466,7 +508,7 @@ class AppLocalizations {
         'todayAlerts': 'تنبيهات اليوم',
         'highPressure': 'ضغط مرتفع!',
         'feverDetected': 'تم اكتشاف حمى!',
-        'humidityIsHigh': 'الرطوبة مرتفعة',
+        'humidityIsHigh': 'الرطوبة مرتفع',
         'pressureIsRising': 'الضغط يرتفع',
         'tempAbove37': 'الحرارة فوق ٣٧ درجة',
         'humidityAlert': 'تنبيه الرطوبة',

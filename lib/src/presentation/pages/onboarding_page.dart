@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smartcast/src/config/routes/app_routes.dart';
+import 'package:smartcast/src/config/localization/app_localizations.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -13,26 +14,28 @@ class _OnboardingPageState extends State<OnboardingPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final List<OnboardingData> _onboardingScreens = [
-    OnboardingData(
-      title: "Welcome to SmartCast",
-      description: "SmartCast simplifies cast management for you and your healthcare team",
-      image: "assets/images/page1Image.jpg",
-    ),
-    OnboardingData(
-      title: "Real-Time Monitoring",
-      description: "Keep track of your cast's condition and receive alerts for any issues",
-      image: "assets/images/page2image.jpg",
-    ),
-    OnboardingData(
-      title: "Stay Connected",
-      description: "Easily share data with your doctor for better recovery and care",
-      image: "assets/images/page3image.jpg",
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
+    
+    final List<OnboardingData> _onboardingScreens = [
+      OnboardingData(
+        title: loc.translate('onboarding.screen1Title'),
+        description: loc.translate('onboarding.screen1Subtitle'),
+        image: "assets/images/page1Image.jpg",
+      ),
+      OnboardingData(
+        title: loc.translate('onboarding.screen2Title'),
+        description: loc.translate('onboarding.screen2Subtitle'),
+        image: "assets/images/page2image.jpg",
+      ),
+      OnboardingData(
+        title: loc.translate('onboarding.screen3Title'),
+        description: loc.translate('onboarding.screen3Subtitle'),
+        image: "assets/images/page3image.jpg",
+      ),
+    ];
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -72,7 +75,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_currentPage == _onboardingScreens.length - 1) {
-                        Navigator.of(context).pushReplacementNamed(AppRoutes.welcome);
+                        Navigator.of(context).pushReplacementNamed(AppRoutes.login);
                       } else {
                         _pageController.nextPage(
                           duration: const Duration(milliseconds: 300),
@@ -88,7 +91,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       elevation: 0,
                     ),
                     child: Text(
-                      _currentPage == _onboardingScreens.length - 1 ? "Get Started" : "Next",
+                      _currentPage == _onboardingScreens.length - 1 ? loc.onboardingGetStarted : loc.next,
                       style: GoogleFonts.inter(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -105,7 +108,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     height: 65,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).pushReplacementNamed(AppRoutes.welcome);
+                        Navigator.of(context).pushReplacementNamed(AppRoutes.login);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFAEAEB2),
@@ -115,7 +118,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         elevation: 0,
                       ),
                       child: Text(
-                        "Skip",
+                        loc.skip,
                         style: GoogleFonts.inter(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -151,28 +154,40 @@ class _OnboardingPageState extends State<OnboardingPage> {
             ),
           ),
         ),
-        const SizedBox(height: 60),
+        const SizedBox(height: 40),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 31),
           child: Column(
             children: [
-              Text(
-                data.title,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              // Use FittedBox or constrained sizes for flexible text
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 100),
+                child: SingleChildScrollView(
+                  child: Text(
+                    data.title,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.inter(
+                      fontSize: 24, // Slightly smaller base to allow more text
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 20),
-              Text(
-                data.description,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xFF8E8E93),
+              const SizedBox(height: 16),
+              // Flexible container for description
+              SizedBox(
+                height: 140, // Fixed height area for description to prevent button overlap
+                child: SingleChildScrollView(
+                  child: Text(
+                    data.description,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: const Color(0xFF8E8E93),
+                    ),
+                  ),
                 ),
               ),
             ],

@@ -17,7 +17,7 @@ class _WelcomePageState extends State<WelcomePage> {
     await localeProvider.setLocale(Locale(_selectedLanguage));
     
     if (mounted) {
-      Navigator.of(context).pushReplacementNamed(AppRoutes.login);
+      Navigator.of(context).pushReplacementNamed(AppRoutes.onboarding);
     }
   }
 

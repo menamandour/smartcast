@@ -18,7 +18,6 @@ class _RegisterPageState extends State<RegisterPage> {
   late TextEditingController _passwordController;
   late TextEditingController _confirmPasswordController;
   late TextEditingController _fullNameController;
-  late TextEditingController _phoneController;
   bool _obscurePassword = true;
 
   @override
@@ -28,7 +27,6 @@ class _RegisterPageState extends State<RegisterPage> {
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
     _fullNameController = TextEditingController();
-    _phoneController = TextEditingController();
   }
 
   @override
@@ -37,7 +35,6 @@ class _RegisterPageState extends State<RegisterPage> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     _fullNameController.dispose();
-    _phoneController.dispose();
     super.dispose();
   }
 
@@ -63,7 +60,6 @@ class _RegisterPageState extends State<RegisterPage> {
         email: _emailController.text,
         password: _passwordController.text,
         fullName: _fullNameController.text,
-        phone: _phoneController.text.isEmpty ? null : _phoneController.text,
       ),
     );
   }
@@ -72,6 +68,9 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
+
+    const Color inputBackgroundColor = Color(0xFFD6D6D6);
+    const Color buttonColor = Color(0xFF074FAC);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -99,87 +98,62 @@ class _RegisterPageState extends State<RegisterPage> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
-            crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Title
-              Text(
-                loc.createNewAccount,
-                style: Theme.of(context).textTheme.displaySmall,
-              ),
-              const SizedBox(height: 32),
-
-              // Full Name Field
-              Text(loc.fullName, style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _fullNameController,
-                textAlign: isAr ? TextAlign.right : TextAlign.left,
-                decoration: const InputDecoration(hintText: 'John Doe'),
-              ),
-              const SizedBox(height: 24),
-
-              // Email Field
-              Text(loc.email, style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                textAlign: isAr ? TextAlign.right : TextAlign.left,
-                decoration: const InputDecoration(
-                  hintText: 'example@email.com',
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Phone Field
-              Text(loc.phone, style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
-                textAlign: isAr ? TextAlign.right : TextAlign.left,
-                decoration: const InputDecoration(
-                  hintText: '+1 (555) 123-4567',
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Password Field
-              Text(loc.password, style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _passwordController,
-                obscureText: _obscurePassword,
-                textAlign: isAr ? TextAlign.right : TextAlign.left,
-                decoration: InputDecoration(
-                  hintText: '••••••••',
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility
-                          : Icons.visibility_off,
+              // Logo
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF3B82F6),
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
                     ),
-                    onPressed: () {
-                      setState(() => _obscurePassword = !_obscurePassword);
-                    },
+                  ],
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.show_chart,
+                    color: Colors.white,
+                    size: 60,
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
-              // Confirm Password Field
+              // Title
               Text(
-                loc.confirmPassword,
-                style: Theme.of(context).textTheme.titleLarge,
+                loc.createNewAccount,
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _confirmPasswordController,
-                obscureText: _obscurePassword,
-                textAlign: isAr ? TextAlign.right : TextAlign.left,
-                decoration: const InputDecoration(hintText: '••••••••'),
+              const SizedBox(height: 8),
+              Text(
+                loc.registerSubtitle,
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.black54,
+                ),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 36),
+              const SizedBox(height: 40),
+
+              // Input Fields
+              _buildTextField(_fullNameController, loc.fullName, isAr, inputBackgroundColor),
+              const SizedBox(height: 16),
+              _buildTextField(_emailController, loc.email, isAr, inputBackgroundColor, keyboardType: TextInputType.emailAddress),
+              const SizedBox(height: 16),
+              _buildTextField(_passwordController, loc.password, isAr, inputBackgroundColor, obscureText: true),
+              const SizedBox(height: 16),
+              _buildTextField(_confirmPasswordController, loc.confirmPassword, isAr, inputBackgroundColor, obscureText: true),
+              const SizedBox(height: 32),
 
               // Register Button
               BlocBuilder<AuthBloc, AuthState>(
@@ -188,54 +162,94 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   return SizedBox(
                     width: double.infinity,
+                    height: 60,
                     child: ElevatedButton(
                       onPressed: isLoading ? null : _handleRegister,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        backgroundColor: buttonColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
                       ),
                       child: isLoading
                           ? const SizedBox(
-                              height: 20,
-                              width: 20,
+                              height: 24,
+                              width: 24,
                               child: CircularProgressIndicator(
                                 color: AppColors.white,
                                 strokeWidth: 2,
                               ),
                             )
-                          : Text(loc.signUp),
+                          : Text(
+                              loc.signUp,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                   );
                 },
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
 
               // Login Link
-              Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(loc.alreadyHaveAccount),
-                    const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: () => Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => const LoginPage()),
-                      ),
-                      child: Text(
-                        loc.login,
-                        style: const TextStyle(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    isAr ? "لدي حساب بالفعل؟" : "Already have an account? ",
+                    style: const TextStyle(fontSize: 18, color: Colors.black),
+                  ),
+                  const SizedBox(width: 4),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (_) => const LoginPage()),
+                    ),
+                    child: Text(
+                      loc.login,
+                      style: const TextStyle(
+                        color: Color(0xFF074FAC),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               const SizedBox(height: 40),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+    TextEditingController controller,
+    String hint,
+    bool isAr,
+    Color backgroundColor, {
+    bool obscureText = false,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      textAlign: isAr ? TextAlign.right : TextAlign.left,
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: const TextStyle(color: Colors.black54, fontSize: 18),
+        filled: true,
+        fillColor: backgroundColor,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       ),
     );
   }
