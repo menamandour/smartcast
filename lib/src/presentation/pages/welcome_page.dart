@@ -24,7 +24,7 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 31.0),
@@ -68,7 +68,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 style: GoogleFonts.inter(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
               const SizedBox(height: 40),
@@ -102,16 +102,16 @@ class _WelcomePageState extends State<WelcomePage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (_selectedLanguage == 'ar') const Icon(Icons.arrow_back, color: Colors.black, size: 20),
+                      if (_selectedLanguage == 'ar') Icon(Icons.arrow_back, color: Theme.of(context).textTheme.bodyLarge?.color, size: 20),
                       Text(
                         _selectedLanguage == 'ar' ? 'التالي' : 'Next',
                         style: GoogleFonts.inter(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
                         ),
                       ),
-                      if (_selectedLanguage == 'en') const Icon(Icons.arrow_forward, color: Colors.black, size: 20),
+                      if (_selectedLanguage == 'en') Icon(Icons.arrow_forward, color: Theme.of(context).textTheme.bodyLarge?.color, size: 20),
                     ],
                   ),
                 ),
@@ -146,7 +146,9 @@ class _WelcomePageState extends State<WelcomePage> {
           style: GoogleFonts.inter(
             fontSize: 18,
             fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.white : Colors.black,
+            color: isSelected
+                ? Theme.of(context).colorScheme.onPrimary
+                : Theme.of(context).textTheme.bodyLarge?.color,
           ),
         ),
       ),

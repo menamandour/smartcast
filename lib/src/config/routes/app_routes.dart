@@ -9,6 +9,12 @@ import 'package:smartcast/src/presentation/pages/splash_page.dart';
 import 'package:smartcast/src/presentation/pages/welcome_page.dart';
 import 'package:smartcast/src/presentation/pages/devices_page.dart';
 import 'package:smartcast/src/presentation/pages/bluetooth_details_page.dart';
+import 'package:smartcast/src/presentation/pages/edit_profile_page.dart';
+import 'package:smartcast/src/presentation/pages/address_page.dart';
+import 'package:smartcast/src/presentation/pages/history_page.dart';
+import 'package:smartcast/src/presentation/pages/language_page.dart';
+import 'package:smartcast/src/presentation/pages/notification_settings_page.dart';
+import 'package:smartcast/src/presentation/pages/help_center_page.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -21,6 +27,12 @@ class AppRoutes {
   static const String welcome = '/welcome';
   static const String devices = '/devices';
   static const String bluetoothDetails = '/bluetooth-details';
+  static const String editProfile = '/profile/edit';
+  static const String address = '/profile/address';
+  static const String history = '/profile/history';
+  static const String language = '/profile/language';
+  static const String notifications = '/profile/notifications';
+  static const String helpCenter = '/profile/help-center';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
@@ -34,6 +46,12 @@ class AppRoutes {
       welcome: (context) => const WelcomePage(),
       devices: (context) => const DevicesPage(),
       bluetoothDetails: (context) => const BluetoothDetailsPage(),
+      editProfile: (context) => const EditProfilePage(),
+      address: (context) => const AddressPage(),
+      history: (context) => const HistoryPage(),
+      language: (context) => const LanguagePage(),
+      notifications: (context) => const NotificationSettingsPage(),
+      helpCenter: (context) => const HelpCenterPage(),
     };
   }
 }

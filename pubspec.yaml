@@ -30,6 +30,7 @@ dependencies:
   lottie: ^3.0.0
   flutter_blue_plus: ^1.31.10
   permission_handler: ^11.3.1
+  universal_ble: ^1.2.0
 
 dev_dependencies:
   flutter_test:

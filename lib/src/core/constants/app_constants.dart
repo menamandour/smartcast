@@ -14,6 +14,7 @@ class AppConstants {
   static const String isLoggedInKey = 'is_logged_in';
   static const String languageKey = 'language';
   static const String themeKey = 'theme';
+  static const String fontKey = 'font_family';
 
   // Database
   static const String dbName = 'smartcast.db';

@@ -67,7 +67,19 @@
     "viewHistory": "View History",
     "latestReading": "Latest Reading",
     "noData": "No data available",
-    "attachSmartSensor": "Attach the smart sensor to your cast to receive real-time data on pressure, temperature, circulation indicators, and movement tracking — ensuring optimal healing and preventing complications."
+    "attachSmartSensor": "Attach the smart sensor to your cast to receive real-time data on pressure, temperature, circulation indicators, and movement tracking — ensuring optimal healing and preventing complications.",
+    "normal": "Normal",
+    "high": "High",
+    "trend": "Trend",
+    "skinTempNoSigns": "No signs of skin irritation or infection detected.",
+    "skinPressureNoSigns": "No pressure-related complications detected.",
+    "humidityNoSigns": "Humidity levels are within optimal range.",
+    "healthAnalytics": "Health Analytics",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "medicalInsight": "Medical Insight",
+    "castPressureOptimal": "Cast pressure is optimal for healing."
   },
 
   "onboarding": {
@@ -76,5 +88,72 @@
     "monitorYourHealing": "Monitor Your Healing Vital Signs",
     "captureOrConnect": "Capture or connect your smart cast, and we'll track pressure levels, swelling indicators, and healing progress in real time to ensure safe recovery.",
     "getStarted": "Get Started"
+  },
+
+  "navigation": {
+    "home": "Home",
+    "analytics": "Analytics",
+    "patients": "Patients",
+    "devices": "Devices",
+    "settings": "Settings",
+    "profile": "Profile",
+    "history": "History",
+    "language": "Language",
+    "notification": "Notification",
+    "helpCenter": "Help Center",
+    "accountSetting": "Account Setting",
+    "appSetting": "App Setting",
+    "support": "Support",
+    "address": "Address"
+  },
+
+  "bluetooth": {
+    "bluetooth": "Bluetooth",
+    "connectCast": "Connect Cast",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "searchingForDevice": "Searching for device...",
+    "castIdLabel": "Cast ID",
+    "batteryLabel": "Battery"
+  },
+
+  "devices": {
+    "permissionsRequired": "Permissions Required",
+    "bluetoothOffline": "Bluetooth is Offline",
+    "scanningForDevices": "Scanning for Devices...",
+    "connecting": "Connecting...",
+    "readyToScan": "Ready to Scan",
+    "error": "Error",
+    "grantPermissions": "Grant Permissions",
+    "bluetoothScanPermission": "Bluetooth Scan - to find nearby devices",
+    "bluetoothConnectPermission": "Bluetooth Connect - to connect to devices",
+    "locationPermission": "Location - required for Bluetooth scanning",
+    "enableBluetooth": "Please enable Bluetooth on your device to scan for nearby SmartCast devices.",
+    "goToSettings": "Go to Settings > Bluetooth to enable it",
+    "searchingForDevices": "Searching for devices...",
+    "smartCastPoweredOn": "Make sure your SmartCast device is powered on",
+    "foundDevices": "Found {count} Device{plural}",
+    "connectingTo": "Connecting to {device}...",
+    "tapToStartScanning": "Tap the button below to start scanning",
+    "startScanning": "Start Scanning",
+    "errorOccurred": "Error Occurred",
+    "tryAgain": "Try Again"
+  },
+
+  "smartHome": {
+    "smartHome": "Smart Home",
+    "welcomeHome": "Welcome Home!",
+    "smartLamp": "Smart Lamp",
+    "airConditioner": "Air Conditioner",
+    "smartTV": "Smart TV",
+    "securityCamera": "Security Camera"
+  },
+
+  "drawer": {
+    "select": "Select",
+    "changeLanguage": "Change Language",
+    "changeFont": "Change Font",
+    "brightnessLevel": "Brightness Level",
+    "smartCastAr": "SmartCast"
   }
 }

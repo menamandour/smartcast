@@ -30,7 +30,7 @@ class _SensorsPageState extends State<SensorsPage> {
     final List<Map<String, dynamic>> sensors = [
       {
         'type': 'Temperature',
-        'title': '${loc.temperature} ${loc.translate('health.trend')}',
+        'title': '${loc.temperature} ',
         'value': '38.6',
         'unit': '°C',
         'color': Colors.red,
@@ -38,7 +38,7 @@ class _SensorsPageState extends State<SensorsPage> {
       },
       {
         'type': 'Pressure',
-        'title': '${loc.pressure} ${loc.translate('health.trend')}',
+        'title': '${loc.pressure} ',
         'value': '38',
         'unit': 'mmHg',
         'color': Colors.blue,
@@ -46,7 +46,7 @@ class _SensorsPageState extends State<SensorsPage> {
       },
       {
         'type': 'Humidity',
-        'title': '${loc.humidity} ${loc.translate('health.trend')}',
+        'title': '${loc.humidity} ',
         'value': '45',
         'unit': '%',
         'color': Colors.green,
@@ -55,18 +55,18 @@ class _SensorsPageState extends State<SensorsPage> {
     ];
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(isAr ? Icons.arrow_forward_ios : Icons.arrow_back_ios, color: Colors.black),
+          icon: Icon(isAr ? Icons.arrow_forward_ios : Icons.arrow_back_ios, color: Theme.of(context).iconTheme.color),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           loc.healthData,
-          style: const TextStyle(
-            color: Colors.black,
+          style: TextStyle(
+            color: Theme.of(context).textTheme.headlineMedium?.color,
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
@@ -77,7 +77,7 @@ class _SensorsPageState extends State<SensorsPage> {
         child: Container(
           margin: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFFF8F9FB),
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(32),
           ),
           padding: const EdgeInsets.all(24),
@@ -85,11 +85,11 @@ class _SensorsPageState extends State<SensorsPage> {
             crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               Text(
-                loc.healthAnalytics,
-                style: const TextStyle(
+                loc.translate('health.healthAnalytics'),
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E293B),
+                  color: Theme.of(context).textTheme.headlineSmall?.color,
                 ),
               ),
               const SizedBox(height: 24),
@@ -98,11 +98,11 @@ class _SensorsPageState extends State<SensorsPage> {
               Container(
                 height: 50,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE2E8F0),
+                  color: Theme.of(context).dividerColor.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: Row(
-                  children: [loc.day, loc.week, loc.month].map((period) {
+                  children: [loc.translate('health.day'), loc.translate('health.week'), loc.translate('health.month')].map((period) {
                     bool isSelected = (period == loc.day && selectedPeriod == 'Day') || 
                                      (period == loc.week && selectedPeriod == 'Week') || 
                                      (period == loc.month && selectedPeriod == 'Month');
@@ -119,14 +119,16 @@ class _SensorsPageState extends State<SensorsPage> {
                         child: Container(
                           margin: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: isSelected ? Colors.white : Colors.transparent,
+                            color: isSelected ? Theme.of(context).colorScheme.primary : Colors.transparent,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           alignment: Alignment.center,
                           child: Text(
                             period,
                             style: TextStyle(
-                              color: isSelected ? Colors.black : Colors.grey,
+                              color: isSelected
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : Theme.of(context).textTheme.bodyMedium?.color,
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                             ),
                           ),
@@ -155,15 +157,20 @@ class _SensorsPageState extends State<SensorsPage> {
               // Page Indicator
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(sensors.length, (index) => Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _currentPage == index ? sensors[index]['color'] : Colors.grey.shade300,
-                  ),
-                )),
+                children: List.generate(sensors.length, (index) {
+                  final isSelected = _currentPage == index;
+                  return Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isSelected
+                          ? sensors[index]['color']
+                          : Theme.of(context).dividerColor.withOpacity(0.6),
+                    ),
+                  );
+                }),
               ),
               const SizedBox(height: 24),
 
@@ -172,32 +179,32 @@ class _SensorsPageState extends State<SensorsPage> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEFF6FF),
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: const Color(0xFFBFDBFE)),
+                  border: Border.all(color: Theme.of(context).dividerColor),
                 ),
                 child: Column(
                   crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                   children: [
                     Text(
-                      loc.medicalInsight,
-                      style: const TextStyle(
+                      loc.translate('health.medicalInsight'),
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1D4ED8),
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     const SizedBox(height: 16),
                     Text(
                       sensors[_currentPage]['insight'],
                       textAlign: isAr ? TextAlign.right : TextAlign.left,
-                      style: TextStyle(color: Colors.blue.shade800, fontSize: 14),
+                      style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color, fontSize: 14),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      loc.castPressureOptimal,
+                      loc.translate('health.castPressureOptimal'),
                       textAlign: isAr ? TextAlign.right : TextAlign.left,
-                      style: TextStyle(color: Colors.blue.shade800, fontSize: 14),
+                      style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color, fontSize: 14),
                     ),
                   ],
                 ),
@@ -214,9 +221,9 @@ class _SensorsPageState extends State<SensorsPage> {
       margin: const EdgeInsets.symmetric(horizontal: 4),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.black12.withOpacity(0.05)),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Column(
         children: [
@@ -256,12 +263,12 @@ class _SensorsPageState extends State<SensorsPage> {
             ),
           ),
           const SizedBox(height: 10),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('00:00', style: TextStyle(color: Colors.grey, fontSize: 12)),
-              Text('12:00', style: TextStyle(color: Colors.grey, fontSize: 12)),
-              Text('23:59', style: TextStyle(color: Colors.grey, fontSize: 12)),
+              Text('00:00', style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color, fontSize: 12)),
+              Text('12:00', style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color, fontSize: 12)),
+              Text('23:59', style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color, fontSize: 12)),
             ],
           )
         ],

@@ -34,15 +34,19 @@ class _HomePageState extends State<HomePage> {
     final loc = AppLocalizations.of(context);
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
 
+    final theme = Theme.of(context);
+    final titleColor = theme.textTheme.headlineMedium?.color ?? Colors.black;
+    final subtitleColor = theme.textTheme.bodyMedium?.color ?? Colors.black54;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       drawer: _buildDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
-            icon: const Icon(Icons.menu, color: Colors.black, size: 28),
+            icon: Icon(Icons.menu, color: theme.iconTheme.color, size: 28),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
@@ -53,8 +57,8 @@ class _HomePageState extends State<HomePage> {
                 : 'Guest';
             return Text(
               '${loc.welcomeBack} $name',
-              style: const TextStyle(
-                color: Colors.black,
+              style: TextStyle(
+                color: titleColor,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -88,10 +92,10 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 20),
                 Text(
                   loc.appName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: titleColor,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -99,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                   title: loc.pressure,
                   value: '38',
                   unit: 'mmHg',
-                  status: loc.normal,
+                  status: loc.translate('health.normal'),
                   statusColor: AppColors.success,
                   icon: Icons.show_chart,
                 ),
@@ -108,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                   title: loc.temperature,
                   value: '38.6',
                   unit: '°C',
-                  status: loc.high,
+                  status: loc.translate('health.high'),
                   statusColor: AppColors.error,
                   icon: Icons.thermostat,
                 ),
@@ -158,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                   children: [
                     Text(
-                      loc.smartCastAr,
+                      loc.translate('appName'),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -192,14 +196,14 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             const Divider(color: Colors.white12, height: 40),
-            _buildDrawerItem(loc.home, Icons.home_outlined, isAr, onTap: () => Navigator.of(context).pop()),
-            _buildDrawerItem(loc.analytics, Icons.bar_chart, isAr),
-            _buildDrawerItem(loc.patients, Icons.person_outline, isAr),
-            _buildDrawerItem(loc.devices, Icons.settings_input_component_outlined, isAr, onTap: () {
+            _buildDrawerItem(loc.translate('drawer.home'), Icons.home_outlined, isAr, onTap: () => Navigator.of(context).pop()),
+            _buildDrawerItem(loc.translate('drawer.analytics'), Icons.bar_chart, isAr),
+            _buildDrawerItem(loc.translate('drawer.patients'), Icons.person_outline, isAr),
+            _buildDrawerItem(loc.translate('drawer.devices'), Icons.settings_input_component_outlined, isAr, onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed(AppRoutes.devices);
             }),
-            _buildDrawerItem(loc.settings, Icons.settings_outlined, isAr),
+            _buildDrawerItem(loc.translate('drawer.settings'), Icons.settings_outlined, isAr),
             const Spacer(),
             _buildDrawerItem(loc.logout, Icons.logout, isAr, onTap: () {
               context.read<AuthBloc>().add(const AuthLogoutEvent());
@@ -252,13 +256,15 @@ class _HomePageState extends State<HomePage> {
     final loc = AppLocalizations.of(context);
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
 
+    final theme = Theme.of(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey[300],
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.black26),
+        border: Border.all(color: theme.dividerColor),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -283,7 +289,7 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.bold,
                     color: title == loc.temperature
                         ? AppColors.error
-                        : Colors.black,
+                        : Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                 ),
                 const SizedBox(height: 4),

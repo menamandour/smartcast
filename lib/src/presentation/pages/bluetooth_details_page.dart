@@ -10,16 +10,16 @@ class BluetoothDetailsPage extends StatelessWidget {
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         leading: IconButton(
           icon: Icon(isAr ? Icons.arrow_forward_ios : Icons.arrow_back_ios, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          loc.bluetooth,
+          loc.translate('bluetooth.bluetooth'),
           style: const TextStyle(
             color: Colors.black,
             fontSize: 24,
@@ -60,7 +60,7 @@ class BluetoothDetailsPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  loc.connected,
+                  loc.translate('bluetooth.connected'),
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -87,7 +87,7 @@ class BluetoothDetailsPage extends StatelessWidget {
                   crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${loc.castIdLabel}: #0092',
+                      '${loc.translate('bluetooth.castIdLabel')}: #0092',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -100,7 +100,7 @@ class BluetoothDetailsPage extends StatelessWidget {
                         const Icon(Icons.search, color: Color(0xFF1E60FF)),
                         const SizedBox(width: 8),
                         Text(
-                          '${loc.batteryLabel}: 89%',
+                          '${loc.translate('bluetooth.batteryLabel')}: 89%',
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w500,
@@ -153,7 +153,7 @@ class BluetoothDetailsPage extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    loc.disconnected,
+                    loc.translate('bluetooth.disconnected'),
                     style: const TextStyle(
                       color: Color(0xFF0A0E21),
                       fontSize: 22,
@@ -172,7 +172,7 @@ class BluetoothDetailsPage extends StatelessWidget {
                 const Icon(Icons.wifi, color: Color(0xFF1E60FF), size: 40),
                 const SizedBox(height: 8),
                 Text(
-                  loc.searchingForDevice,
+                  loc.translate('bluetooth.searchingForDevice'),
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,

@@ -48,9 +48,9 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     const Color inputBackgroundColor = Color(0xFFD6D6D6);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         leading: IconButton(
           icon: Icon(isAr ? Icons.arrow_forward : Icons.arrow_back, color: Colors.black),

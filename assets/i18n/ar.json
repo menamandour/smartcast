@@ -67,7 +67,19 @@
     "viewHistory": "عرض السجل",
     "latestReading": "آخر قراءة",
     "noData": "لا توجد بيانات متاحة",
-    "attachSmartSensor": "قم بإرفاق المستشعر الذكي بجبيرتك لتلقي بيانات فورية عن الضغط ودرجة الحرارة ومؤشرات الدورة الدموية وتتبع الحركة — لضمان الشفاء الأمثل ومنع المضاعفات."
+    "attachSmartSensor": "قم بإرفاق المستشعر الذكي بجبيرتك لتلقي بيانات فورية عن الضغط ودرجة الحرارة ومؤشرات الدورة الدموية وتتبع الحركة — لضمان الشفاء الأمثل ومنع المضاعفات.",
+    "normal": "طبيعي",
+    "high": "مرتفع",
+    "trend": "الاتجاه",
+    "skinTempNoSigns": "لم يتم اكتشاف أي علامات تهيج أو عدوى في الجلد.",
+    "skinPressureNoSigns": "لم يتم اكتشاف أي مضاعفات متعلقة بالضغط.",
+    "humidityNoSigns": "مستويات الرطوبة ضمن النطاق المثالي.",
+    "healthAnalytics": "تحليلات الصحة",
+    "day": "يوم",
+    "week": "أسبوع",
+    "month": "شهر",
+    "medicalInsight": "رؤية طبية",
+    "castPressureOptimal": "ضغط الجبيرة مثالي للشفاء."
   },
 
   "onboarding": {
@@ -76,5 +88,72 @@
     "monitorYourHealing": "مراقبة الجبيرة الذكية",
     "captureOrConnect": "التقط أو قم بتوصيل جبيرتك الذكية، وسنتابع مستويات الضغط ومؤشرات التورم وتقدم الشفاء في الوقت الفعلي لضمان التعافي الآمن.",
     "getStarted": "ابدأ الآن"
+  },
+
+  "navigation": {
+    "home": "الرئيسية",
+    "analytics": "التحليلات",
+    "patients": "المرضى",
+    "devices": "الأجهزة",
+    "settings": "الإعدادات",
+    "profile": "الملف الشخصي",
+    "history": "السجل",
+    "language": "اللغة",
+    "notification": "الإشعارات",
+    "helpCenter": "مركز المساعدة",
+    "accountSetting": "إعدادات الحساب",
+    "appSetting": "إعدادات التطبيق",
+    "support": "الدعم",
+    "address": "العنوان"
+  },
+
+  "bluetooth": {
+    "bluetooth": "البلوتوث",
+    "connectCast": "ربط الجبيرة",
+    "connected": "متصل",
+    "disconnected": "غير متصل",
+    "searchingForDevice": "البحث عن الجهاز...",
+    "castIdLabel": "معرف الجبيرة",
+    "batteryLabel": "البطارية"
+  },
+
+  "devices": {
+    "permissionsRequired": "الصلاحيات مطلوبة",
+    "bluetoothOffline": "البلوتوث غير متصل",
+    "scanningForDevices": "البحث عن الأجهزة...",
+    "connecting": "جاري الاتصال...",
+    "readyToScan": "جاهز للبحث",
+    "error": "خطأ",
+    "grantPermissions": "منح الصلاحيات",
+    "bluetoothScanPermission": "البحث بالبلوتوث - للعثور على الأجهزة القريبة",
+    "bluetoothConnectPermission": "الاتصال بالبلوتوث - للاتصال بالأجهزة",
+    "locationPermission": "الموقع - مطلوب للبحث بالبلوتوث",
+    "enableBluetooth": "يرجى تفعيل البلوتوث على جهازك للبحث عن أجهزة SmartCast القريبة.",
+    "goToSettings": "اذهب إلى الإعدادات > البلوتوث لتفعيله",
+    "searchingForDevices": "البحث عن الأجهزة...",
+    "smartCastPoweredOn": "تأكد من تشغيل جهاز SmartCast الخاص بك",
+    "foundDevices": "تم العثور على {count} جهاز{plural}",
+    "connectingTo": "الاتصال بـ {device}...",
+    "tapToStartScanning": "اضغط على الزر أدناه لبدء البحث",
+    "startScanning": "بدء البحث",
+    "errorOccurred": "حدث خطأ",
+    "tryAgain": "حاول مرة أخرى"
+  },
+
+  "smartHome": {
+    "smartHome": "المنزل الذكي",
+    "welcomeHome": "مرحبا بك في المنزل!",
+    "smartLamp": "المصباح الذكي",
+    "airConditioner": "المكيف",
+    "smartTV": "التلفزيون الذكي",
+    "securityCamera": "كاميرا الأمان"
+  },
+
+  "drawer": {
+    "select": "اختر",
+    "changeLanguage": "تغيير اللغة",
+    "changeFont": "تغيير الخط",
+    "brightnessLevel": "مستوى السطوع",
+    "smartCastAr": "SmartCast"
   }
 }

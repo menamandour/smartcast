@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartcast/src/config/localization/app_localizations.dart';
+import 'package:smartcast/src/config/routes/app_routes.dart';
 import 'package:smartcast/src/core/constants/app_colors.dart';
 import 'package:smartcast/src/presentation/bloc/auth_bloc.dart';
 
@@ -11,14 +12,15 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
     final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthUnauthenticatedState) {
-              Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+              Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.login, (route) => false);
             }
           },
           child: BlocBuilder<AuthBloc, AuthState>(
@@ -56,10 +58,11 @@ class ProfilePage extends StatelessWidget {
                           const SizedBox(width: 12),
                         ],
                         Text(
-                          loc.profile,
-                          style: const TextStyle(
+                          loc.translate('profile.profile'),
+                          style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
+                            color: theme.textTheme.headlineMedium?.color,
                           ),
                         ),
                         if (isAr) ...[
@@ -94,7 +97,9 @@ class ProfilePage extends StatelessWidget {
                         ],
                         if (isAr) IconButton(
                           icon: const Icon(Icons.edit_note, color: Color(0xFF1E40AF), size: 32),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).pushNamed(AppRoutes.editProfile);
+                          },
                         ),
                         Expanded(
                           child: Column(
@@ -102,16 +107,17 @@ class ProfilePage extends StatelessWidget {
                             children: [
                               Text(
                                 '${loc.welcomeBack} $userName',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
+                                  color: theme.textTheme.headlineMedium?.color,
                                 ),
                               ),
                               Text(
                                 phone,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.black54,
+                                  color: theme.textTheme.bodyMedium?.color,
                                 ),
                               ),
                             ],
@@ -119,7 +125,9 @@ class ProfilePage extends StatelessWidget {
                         ),
                         if (!isAr) IconButton(
                           icon: const Icon(Icons.edit_note, color: Color(0xFF1E40AF), size: 32),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).pushNamed(AppRoutes.editProfile);
+                          },
                         ),
                         if (isAr) ...[
                           const SizedBox(width: 16),
@@ -133,18 +141,48 @@ class ProfilePage extends StatelessWidget {
                     const SizedBox(height: 40),
 
                     // Settings Sections
-                    _buildSectionTitle(loc.accountSetting, isAr),
-                    _buildSettingItem(Icons.location_on_outlined, loc.address, isAr),
-                    _buildSettingItem(Icons.history, loc.history, isAr),
+                    _buildSectionTitle(loc.translate('profile.accountSetting'), isAr, theme),
+                    _buildSettingItem(
+                      icon: Icons.location_on_outlined,
+                      title: loc.translate('profile.address'),
+                      isAr: isAr,
+                      onTap: () => Navigator.of(context).pushNamed(AppRoutes.address),
+                      theme: theme,
+                    ),
+                    _buildSettingItem(
+                      icon: Icons.history,
+                      title: loc.translate('profile.history'),
+                      isAr: isAr,
+                      onTap: () => Navigator.of(context).pushNamed(AppRoutes.history),
+                      theme: theme,
+                    ),
                     
                     const SizedBox(height: 24),
-                    _buildSectionTitle(loc.appSetting, isAr),
-                    _buildSettingItem(Icons.badge_outlined, loc.language, isAr),
-                    _buildSettingItem(Icons.notifications_none_outlined, loc.notification, isAr),
+                    _buildSectionTitle(loc.translate('profile.appSetting'), isAr, theme),
+                    _buildSettingItem(
+                      icon: Icons.badge_outlined,
+                      title: loc.translate('profile.language'),
+                      isAr: isAr,
+                      onTap: () => Navigator.of(context).pushNamed(AppRoutes.language),
+                      theme: theme,
+                    ),
+                    _buildSettingItem(
+                      icon: Icons.notifications_none_outlined,
+                      title: loc.translate('profile.notification'),
+                      isAr: isAr,
+                      onTap: () => Navigator.of(context).pushNamed(AppRoutes.notifications),
+                      theme: theme,
+                    ),
                     
                     const SizedBox(height: 24),
-                    _buildSectionTitle(loc.support, isAr),
-                    _buildSettingItem(Icons.help_outline, loc.helpCenter, isAr),
+                    _buildSectionTitle(loc.translate('profile.support'), isAr, theme),
+                    _buildSettingItem(
+                      icon: Icons.help_outline,
+                      title: loc.translate('profile.helpCenter'),
+                      isAr: isAr,
+                      onTap: () => Navigator.of(context).pushNamed(AppRoutes.helpCenter),
+                      theme: theme,
+                    ),
 
                     const SizedBox(height: 40),
 
@@ -158,15 +196,15 @@ class ProfilePage extends StatelessWidget {
                             context.read<AuthBloc>().add(const AuthLogoutEvent());
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF1E60FF),
+                            backgroundColor: theme.colorScheme.primary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25),
                             ),
                           ),
                           child: Text(
                             loc.logout,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: theme.colorScheme.onPrimary,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -184,49 +222,64 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title, bool isAr) {
+  Widget _buildSectionTitle(String title, bool isAr, ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Align(
         alignment: isAr ? Alignment.centerRight : Alignment.centerLeft,
         child: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: theme.textTheme.headlineSmall?.color,
           ),
         ),
       ),
     );
   }
 
-  Widget _buildSettingItem(IconData icon, String title, bool isAr) {
+  Widget _buildSettingItem({
+    required IconData icon,
+    required String title,
+    required bool isAr,
+    required VoidCallback onTap,
+    required ThemeData theme,
+  }) {
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        mainAxisAlignment: isAr ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: [
-          if (!isAr) ...[
-            Icon(icon, color: Colors.black87, size: 28),
-            const SizedBox(width: 16),
-          ],
-          if (isAr) const Icon(Icons.arrow_back_ios, size: 18, color: Colors.black54),
-          if (isAr) const Spacer(),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-            ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Row(
+            mainAxisAlignment: isAr ? MainAxisAlignment.end : MainAxisAlignment.start,
+            children: [
+              if (!isAr) ...[
+                Icon(icon, color: theme.iconTheme.color, size: 28),
+                const SizedBox(width: 16),
+              ],
+              if (isAr) Icon(Icons.arrow_back_ios, size: 18, color: theme.iconTheme.color?.withOpacity(0.7)),
+              if (isAr) const Spacer(),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: theme.textTheme.bodyLarge?.color,
+                ),
+              ),
+              if (!isAr) const Spacer(),
+              if (!isAr) Icon(Icons.arrow_forward_ios, size: 18, color: theme.iconTheme.color?.withOpacity(0.7)),
+              if (isAr) ...[
+                const SizedBox(width: 16),
+                Icon(icon, color: theme.iconTheme.color, size: 28),
+              ],
+            ],
           ),
-          if (!isAr) const Spacer(),
-          if (!isAr) const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black54),
-          if (isAr) ...[
-            const SizedBox(width: 16),
-            Icon(icon, color: Colors.black87, size: 28),
-          ],
-        ],
+        ),
       ),
     );
   }

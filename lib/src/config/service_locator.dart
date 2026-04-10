@@ -17,6 +17,7 @@ import 'package:smartcast/src/domain/usecases/record_health_data_usecase.dart';
 import 'package:smartcast/src/domain/usecases/register_usecase.dart';
 import 'package:smartcast/src/presentation/bloc/auth_bloc.dart';
 import 'package:smartcast/src/presentation/bloc/health_bloc.dart';
+import 'package:smartcast/src/presentation/bloc/bluetooth_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -103,5 +104,9 @@ Future<void> setupServiceLocator() async {
       recordHealthDataUseCase: sl<RecordHealthDataUseCase>(),
       getHealthDataHistoryUseCase: sl<GetHealthDataHistoryUseCase>(),
     ),
+  );
+
+  sl.registerSingleton<BluetoothBloc>(
+    BluetoothBloc(),
   );
 }

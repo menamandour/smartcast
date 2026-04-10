@@ -45,5 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>This app needs Bluetooth access to connect to your SmartCast device</string>
+	<key>NSBluetoothCentralUsageDescription</key>
+	<string>This app needs Bluetooth access to scan for and connect to SmartCast devices</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location access is required for Bluetooth scanning on iOS devices</string>
 </dict>
 </plist>

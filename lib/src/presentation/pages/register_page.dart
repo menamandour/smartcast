@@ -5,6 +5,7 @@ import 'package:smartcast/src/core/constants/app_colors.dart';
 import 'package:smartcast/src/presentation/bloc/auth_bloc.dart';
 import 'package:smartcast/src/presentation/pages/login_page.dart';
 import 'package:smartcast/src/core/providers/locale_provider.dart';
+import 'package:smartcast/src/core/providers/settings_provider.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -73,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
     const Color buttonColor = Color(0xFF074FAC);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       drawer: _buildAuthDrawer(loc, isAr),
       appBar: AppBar(
         elevation: 0, 
@@ -273,30 +274,66 @@ class _RegisterPageState extends State<RegisterPage> {
                 title: loc.translate('drawer.changeLanguage'),
                 isAr: isAr,
                 children: [
-                   ListTile(
+                  ListTile(
                     title: const Text('English'),
-                    onTap: () => localeProvider.setLocale(const Locale('en')),
+                    onTap: () {
+                      localeProvider.setLocale(const Locale('en'));
+                      Navigator.of(context).pop();
+                    },
+                    selected: localeProvider.locale.languageCode == 'en',
                   ),
                   ListTile(
                     title: const Text('العربية'),
-                    onTap: () => localeProvider.setLocale(const Locale('ar')),
+                    onTap: () {
+                      localeProvider.setLocale(const Locale('ar'));
+                      Navigator.of(context).pop();
+                    },
+                    selected: localeProvider.locale.languageCode == 'ar',
                   ),
                 ],
               ),
               _buildDrawerExpansionTile(
                 title: loc.translate('drawer.changeFont'),
                 isAr: isAr,
-                children: const [
-                  ListTile(title: Text('Default')),
-                  ListTile(title: Text('Serif')),
+                children: [
+                  ListTile(
+                    title: const Text('Inter'),
+                    onTap: () {
+                      settingsProvider.setFontFamily('Inter');
+                      Navigator.of(context).pop();
+                    },
+                    selected: settingsProvider.fontFamily == 'Inter',
+                  ),
+                  ListTile(
+                    title: const Text('Tajawal'),
+                    onTap: () {
+                      settingsProvider.setFontFamily('Tajawal');
+                      Navigator.of(context).pop();
+                    },
+                    selected: settingsProvider.fontFamily == 'Tajawal',
+                  ),
                 ],
               ),
               _buildDrawerExpansionTile(
                 title: loc.translate('drawer.brightnessLevel'),
                 isAr: isAr,
-                children: const [
-                  ListTile(title: Text('Light')),
-                  ListTile(title: Text('Dark')),
+                children: [
+                  ListTile(
+                    title: const Text('Light'),
+                    onTap: () {
+                      settingsProvider.setThemeMode(ThemeMode.light);
+                      Navigator.of(context).pop();
+                    },
+                    selected: settingsProvider.themeMode == ThemeMode.light,
+                  ),
+                  ListTile(
+                    title: const Text('Dark'),
+                    onTap: () {
+                      settingsProvider.setThemeMode(ThemeMode.dark);
+                      Navigator.of(context).pop();
+                    },
+                    selected: settingsProvider.themeMode == ThemeMode.dark,
+                  ),
                 ],
               ),
             ],

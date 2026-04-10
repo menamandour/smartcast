@@ -19,7 +19,7 @@ class AppLocalizations {
     return true;
   }
 
-  String translate(String key) {
+  String translate(String key, {Map<String, dynamic>? args}) {
     List<String> keys = key.split('.');
     dynamic value = _translations;
 
@@ -31,7 +31,15 @@ class AppLocalizations {
       }
     }
 
-    return value?.toString() ?? key;
+    String translation = value?.toString() ?? key;
+
+    if (args != null) {
+      args.forEach((key, value) {
+        translation = translation.replaceAll('{$key}', value.toString());
+      });
+    }
+
+    return translation;
   }
 
   String get appName => translate('appName');
@@ -362,6 +370,24 @@ class AppLocalizations {
         'castIdLabel': 'Cast ID',
         'batteryLabel': 'Battery',
         'searchingForDevice': 'Searching for device...',
+        'foundDevices': 'Found {count} device{plural}',
+        'connectingTo': 'Connecting to {device}',
+        'readyToScan': 'Ready to scan',
+        'scanningForDevices': 'Scanning for devices...',
+        'error': 'Error',
+        'permissionsRequired': 'Permissions Required',
+        'bluetoothOffline': 'Bluetooth is Offline',
+        'connecting': 'Connecting...',
+        'bluetoothScanPermission': 'Bluetooth Scan',
+        'bluetoothConnectPermission': 'Bluetooth Connect',
+        'locationPermission': 'Location',
+        'grantPermissions': 'Grant Permissions',
+        'enableBluetooth': 'Please enable Bluetooth to continue.',
+        'goToSettings': 'Go to Settings',
+        'smartCastPoweredOn': 'Make sure your Smart Cast is powered on.',
+        'startScanning': 'Start Scanning',
+        'errorOccurred': 'An Error Occurred',
+        'tapToStartScanning': 'Tap the button below to start searching.',
       }
     };
   }
@@ -533,6 +559,24 @@ class AppLocalizations {
         'castIdLabel': 'معرف الجبيرة',
         'batteryLabel': 'البطارية',
         'searchingForDevice': 'جاري البحث عن جهاز...',
+        'foundDevices': 'تم العثور على {count} جهاز',
+        'connectingTo': 'جاري الاتصال بـ {device}',
+        'readyToScan': 'جاهز للمسح',
+        'scanningForDevices': 'جاري البحث عن أجهزة...',
+        'error': 'خطأ',
+        'permissionsRequired': 'الأذونات مطلوبة',
+        'bluetoothOffline': 'البلوتوث مغلق',
+        'connecting': 'جاري الاتصال...',
+        'bluetoothScanPermission': 'مسح البلوتوث',
+        'bluetoothConnectPermission': 'الاتصال بالبلوتوث',
+        'locationPermission': 'الموقع',
+        'grantPermissions': 'منح الأذونات',
+        'enableBluetooth': 'يرجى تفعيل البلوتوث للمتابعة.',
+        'goToSettings': 'الذهاب للإعدادات',
+        'smartCastPoweredOn': 'تأكد من تشغيل الجبيرة الذكية.',
+        'startScanning': 'بدء البحث',
+        'errorOccurred': 'حدث خطأ',
+        'tapToStartScanning': 'اضغط على الزر أدناه لبدء البحث.',
       }
     };
   }

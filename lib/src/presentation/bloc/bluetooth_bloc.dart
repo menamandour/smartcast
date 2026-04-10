@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:universal_ble/universal_ble.dart';
 import 'package:equatable/equatable.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 // Events
 abstract class BluetoothEvent extends Equatable {
@@ -11,15 +10,23 @@ abstract class BluetoothEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class CheckBluetoothStatusEvent extends BluetoothEvent {}
+class RequestPermissionsEvent extends BluetoothEvent {}
 class StartScanEvent extends BluetoothEvent {}
 class StopScanEvent extends BluetoothEvent {}
 class ConnectToDeviceEvent extends BluetoothEvent {
-  final BluetoothDevice device;
+  final BleDevice device;
   const ConnectToDeviceEvent(this.device);
   @override
   List<Object?> get props => [device];
 }
 class DisconnectFromDeviceEvent extends BluetoothEvent {}
+class _UpdateScanResultsEvent extends BluetoothEvent {
+  final List<BleDevice> results;
+  const _UpdateScanResultsEvent(this.results);
+  @override
+  List<Object?> get props => [results];
+}
 
 // States
 abstract class BluetoothState extends Equatable {
@@ -29,20 +36,27 @@ abstract class BluetoothState extends Equatable {
 }
 
 class BluetoothInitial extends BluetoothState {}
+class BluetoothPermissionsDenied extends BluetoothState {
+  final String message;
+  const BluetoothPermissionsDenied(this.message);
+  @override
+  List<Object?> get props => [message];
+}
+class BluetoothDisabled extends BluetoothState {}
 class BluetoothScanning extends BluetoothState {
-  final List<ScanResult> scanResults;
+  final List<BleDevice> scanResults;
   const BluetoothScanning(this.scanResults);
   @override
   List<Object?> get props => [scanResults];
 }
 class BluetoothConnecting extends BluetoothState {
-  final BluetoothDevice device;
+  final BleDevice device;
   const BluetoothConnecting(this.device);
   @override
   List<Object?> get props => [device];
 }
 class BluetoothConnected extends BluetoothState {
-  final BluetoothDevice device;
+  final BleDevice device;
   const BluetoothConnected(this.device);
   @override
   List<Object?> get props => [device];
@@ -57,78 +71,186 @@ class BluetoothError extends BluetoothState {
 
 // BLoC
 class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
-  StreamSubscription? _scanSubscription;
-  BluetoothDevice? _connectedDevice;
+  StreamSubscription<BleDevice>? _scanSubscription;
+  final List<BleDevice> _scanResults = [];
+  BleDevice? _connectedDevice;
+  bool _isScanning = false;
 
   BluetoothBloc() : super(BluetoothInitial()) {
+    on<CheckBluetoothStatusEvent>(_onCheckBluetoothStatus);
+    on<RequestPermissionsEvent>(_onRequestPermissions);
     on<StartScanEvent>(_onStartScan);
     on<StopScanEvent>(_onStopScan);
     on<ConnectToDeviceEvent>(_onConnectToDevice);
     on<DisconnectFromDeviceEvent>(_onDisconnectFromDevice);
+    on<_UpdateScanResultsEvent>(_onUpdateScanResults);
   }
 
-  Future<void> _onStartScan(StartScanEvent event, Emitter<BluetoothState> emit) async {
-    // Check permissions
-    if (await Permission.bluetoothScan.request().isGranted &&
-        await Permission.bluetoothConnect.request().isGranted &&
-        await Permission.location.request().isGranted) {
-      
-      emit(const BluetoothScanning([]));
-      
-      _scanSubscription?.cancel();
-      _scanSubscription = FlutterBluePlus.scanResults.listen((results) {
-        add(_UpdateScanResultsEvent(results));
-      });
+  Future<bool> _hasPermissions() async {
+    final status = await UniversalBle.hasPermissions();
+    return status == true;
+  }
 
-      try {
-        await FlutterBluePlus.startScan(timeout: const Duration(seconds: 15));
-      } catch (e) {
-        emit(BluetoothError(e.toString()));
+  Future<bool> _requestPermissions() async {
+    await UniversalBle.requestPermissions();
+    final status = await UniversalBle.hasPermissions();
+    return status == true;
+  }
+
+  Future<bool> _ensureBluetoothReady(Emitter<BluetoothState> emit) async {
+    try {
+      final availability = await UniversalBle.getBluetoothAvailabilityState();
+      if (availability == AvailabilityState.unsupported) {
+        emit(const BluetoothError('Bluetooth is not available on this device'));
+        return false;
       }
-    } else {
-      emit(const BluetoothError("Permissions not granted"));
+      if (availability != AvailabilityState.poweredOn) {
+        emit(BluetoothDisabled());
+        return false;
+      }
+      if (!await _hasPermissions()) {
+        emit(const BluetoothPermissionsDenied('Bluetooth permissions are required to scan devices'));
+        return false;
+      }
+      return true;
+    } catch (e) {
+      emit(BluetoothError('Bluetooth readiness check failed: $e'));
+      return false;
     }
   }
 
-  // Internal event to update UI with scan results
-  void _onUpdateScanResults(_UpdateScanResultsEvent event, Emitter<BluetoothState> emit) {
+  Future<void> _onCheckBluetoothStatus(
+    CheckBluetoothStatusEvent event,
+    Emitter<BluetoothState> emit,
+  ) async {
+    try {
+      final availability = await UniversalBle.getBluetoothAvailabilityState();
+      if (availability == AvailabilityState.unsupported) {
+        emit(const BluetoothError('Bluetooth is not available on this device'));
+        return;
+      }
+      if (availability != AvailabilityState.poweredOn) {
+        emit(BluetoothDisabled());
+        return;
+      }
+      if (!await _hasPermissions()) {
+        emit(const BluetoothPermissionsDenied('Bluetooth permissions are required to scan devices'));
+        return;
+      }
+      emit(BluetoothInitial());
+    } catch (e) {
+      emit(BluetoothError('Bluetooth status check failed: $e'));
+    }
+  }
+
+  Future<void> _onRequestPermissions(
+    RequestPermissionsEvent event,
+    Emitter<BluetoothState> emit,
+  ) async {
+    try {
+      final granted = await _requestPermissions();
+      if (!granted) {
+        emit(const BluetoothPermissionsDenied('Bluetooth permissions denied'));
+        return;
+      }
+      final availability = await UniversalBle.getBluetoothAvailabilityState();
+      if (availability != AvailabilityState.poweredOn) {
+        emit(BluetoothDisabled());
+      } else {
+        emit(BluetoothInitial());
+      }
+    } catch (e) {
+      emit(BluetoothError('Permission request failed: $e'));
+    }
+  }
+
+  Future<void> _onStartScan(
+    StartScanEvent event,
+    Emitter<BluetoothState> emit,
+  ) async {
+    if (!await _ensureBluetoothReady(emit)) {
+      return;
+    }
+
+    emit(BluetoothScanning([]));
+    _scanResults.clear();
+    _scanSubscription?.cancel();
+    _isScanning = true;
+
+    _scanSubscription = UniversalBle.scanStream.listen(
+      (BleDevice bleDevice) {
+        final exists = _scanResults.any((d) => d.deviceId == bleDevice.deviceId);
+        if (!exists) {
+          _scanResults.add(bleDevice);
+          add(_UpdateScanResultsEvent(List.unmodifiable(_scanResults)));
+        }
+      },
+      onError: (error) {
+        emit(BluetoothError('Scan error: $error'));
+      },
+    );
+
+    try {
+      await UniversalBle.startScan();
+      Future.delayed(const Duration(seconds: 50), () {
+        if (_isScanning) {
+          add(StopScanEvent());
+        }
+      });
+    } catch (e) {
+      emit(BluetoothError('Failed to start scan: $e'));
+    }
+  }
+
+  Future<void> _onUpdateScanResults(
+    _UpdateScanResultsEvent event,
+    Emitter<BluetoothState> emit,
+  ) async {
     emit(BluetoothScanning(event.results));
   }
 
-  Future<void> _onStopScan(StopScanEvent event, Emitter<BluetoothState> emit) async {
-    await FlutterBluePlus.stopScan();
-    _scanSubscription?.cancel();
-    if (state is BluetoothScanning) {
-      emit(BluetoothInitial());
-    }
+  Future<void> _onStopScan(
+    StopScanEvent event,
+    Emitter<BluetoothState> emit,
+  ) async {
+    _isScanning = false;
+    try {
+      await UniversalBle.stopScan();
+    } catch (_) {}
+    await _scanSubscription?.cancel();
+    _scanSubscription = null;
+    emit(BluetoothInitial());
   }
 
-  Future<void> _onConnectToDevice(ConnectToDeviceEvent event, Emitter<BluetoothState> emit) async {
+  Future<void> _onConnectToDevice(
+    ConnectToDeviceEvent event,
+    Emitter<BluetoothState> emit,
+  ) async {
     emit(BluetoothConnecting(event.device));
     try {
+      _isScanning = false;
+      try {
+        await UniversalBle.stopScan();
+      } catch (_) {}
+      await _scanSubscription?.cancel();
+      _scanSubscription = null;
+
       await event.device.connect();
       _connectedDevice = event.device;
       emit(BluetoothConnected(event.device));
     } catch (e) {
-      emit(BluetoothError("Failed to connect: ${e.toString()}"));
+      emit(BluetoothError('Failed to connect: $e'));
     }
   }
 
-  Future<void> _onDisconnectFromDevice(DisconnectFromDeviceEvent event, Emitter<BluetoothState> emit) async {
+  Future<void> _onDisconnectFromDevice(
+    DisconnectFromDeviceEvent event,
+    Emitter<BluetoothState> emit,
+  ) async {
     if (_connectedDevice != null) {
       await _connectedDevice!.disconnect();
       _connectedDevice = null;
       emit(BluetoothDisconnected());
-    }
-  }
-
-  // Internal helper for state updates
-  @override
-  void on<E extends BluetoothEvent>(EventHandler<E, BluetoothState> handler, {EventTransformer<E>? transformer}) {
-    if (E == _UpdateScanResultsEvent) {
-      super.on<_UpdateScanResultsEvent>((event, emit) => emit(BluetoothScanning(event.results)));
-    } else {
-      super.on<E>(handler, transformer: transformer);
     }
   }
 
@@ -137,9 +259,4 @@ class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
     _scanSubscription?.cancel();
     return super.close();
   }
-}
-
-class _UpdateScanResultsEvent extends BluetoothEvent {
-  final List<ScanResult> results;
-  const _UpdateScanResultsEvent(this.results);
 }
