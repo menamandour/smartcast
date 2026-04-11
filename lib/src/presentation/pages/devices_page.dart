@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartcast/src/config/localization/app_localizations.dart';
 import 'package:smartcast/src/config/routes/app_routes.dart';
+import 'package:smartcast/src/core/constants/app_constants.dart';
 import 'package:smartcast/src/presentation/bloc/bluetooth_bloc.dart';
 
 class DevicesPage extends StatefulWidget {
@@ -18,9 +19,11 @@ class _DevicesPageState extends State<DevicesPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_initializationDone) {
-      final bloc = context.read<BluetoothBloc>();
-      bloc.add(CheckBluetoothStatusEvent());
-      bloc.add(StartScanEvent());
+      if (AppConstants.useRealApi) {
+        final bloc = context.read<BluetoothBloc>();
+        bloc.add(CheckBluetoothStatusEvent());
+        bloc.add(StartScanEvent());
+      }
       _initializationDone = true;
     }
   }
@@ -48,59 +51,61 @@ class _DevicesPageState extends State<DevicesPage> {
         ),
         centerTitle: true,
       ),
-      body: BlocConsumer<BluetoothBloc, BluetoothState>(
-        listener: (context, state) {
-          if (state is BluetoothConnected) {
-            Navigator.of(context).pushNamed(AppRoutes.bluetoothDetails);
-          }
-          if (state is BluetoothError) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
-          }
-        },
-        builder: (context, state) {
-          return SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Column(
-                      crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 20),
+      body: AppConstants.useRealApi
+          ? BlocConsumer<BluetoothBloc, BluetoothState>(
+              listener: (context, state) {
+                if (state is BluetoothConnected) {
+                  Navigator.of(context).pushNamed(AppRoutes.bluetoothDetails);
+                }
+                if (state is BluetoothError) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+                }
+              },
+              builder: (context, state) {
+                return SafeArea(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: Column(
+                            crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 20),
 
-                        // Status Header
-                        _buildStatusHeader(loc, state),
+                              // Status Header
+                              _buildStatusHeader(loc, state),
 
-                        const SizedBox(height: 24),
+                              const SizedBox(height: 24),
 
-                        // Permissions Denied
-                        if (state is BluetoothPermissionsDenied)
-                          _buildPermissionsDeniedSection(loc, context)
-                        // Bluetooth Disabled
-                        else if (state is BluetoothDisabled)
-                          _buildBluetoothDisabledSection(loc)
-                        // Scanning
-                        else if (state is BluetoothScanning)
-                          _buildScanningSection(loc, isAr, state)
-                        // Connecting/Connected
-                        else if (state is BluetoothConnecting)
-                          _buildConnectingSection(loc, state)
-                        // Initial
-                        else if (state is BluetoothInitial)
-                          _buildInitialSection(loc, context)
-                        // Error
-                        else if (state is BluetoothError)
-                          _buildErrorSection(loc, state, context),
-                      ],
-                    ),
+                              // Permissions Denied
+                              if (state is BluetoothPermissionsDenied)
+                                _buildPermissionsDeniedSection(loc, context)
+                              // Bluetooth Disabled
+                              else if (state is BluetoothDisabled)
+                                _buildBluetoothDisabledSection(loc)
+                              // Scanning
+                              else if (state is BluetoothScanning)
+                                _buildScanningSection(loc, isAr, state)
+                              // Connecting/Connected
+                              else if (state is BluetoothConnecting)
+                                _buildConnectingSection(loc, state)
+                              // Initial
+                              else if (state is BluetoothInitial)
+                                _buildInitialSection(loc, context)
+                              // Error
+                              else if (state is BluetoothError)
+                                _buildErrorSection(loc, state, context),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+                );
+              },
+            )
+          : _buildDemoScreen(loc, isAr),
     );
   }
 
@@ -126,7 +131,7 @@ class _DevicesPageState extends State<DevicesPage> {
       statusColor = Colors.orange;
       statusIcon = Icons.bluetooth_connected;
     } else if (state is BluetoothConnected) {
-      statusText = loc.translate('bluetooth.connected');
+      statusText = loc.translate('devices.connected');
       statusColor = Colors.green;
       statusIcon = Icons.bluetooth_connected;
     } else if (state is BluetoothInitial) {
@@ -261,7 +266,7 @@ class _DevicesPageState extends State<DevicesPage> {
           const SizedBox(height: 24),
           Center(
             child: Text(
-              loc.translate('devices.searchingForDevice'),
+              loc.translate('bluetooth.searchingForDevice'),
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
@@ -383,7 +388,7 @@ class _DevicesPageState extends State<DevicesPage> {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
             child: Text(
-              loc.tryAgain,
+              loc.translate('devices.tryAgain'),
               style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
@@ -461,6 +466,99 @@ class _DevicesPageState extends State<DevicesPage> {
             const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDemoScreen(AppLocalizations loc, bool isAr) {
+    final demoDevices = const [
+      'Smart Cast',
+      'Smart Cast',
+      'Smart Cast',
+    ];
+
+    return SafeArea(
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.blue.shade50,
+                            border: Border.all(color: const Color(0xFF1E60FF), width: 4),
+                          ),
+                          child: const Center(
+                            child: Icon(Icons.bluetooth, color: Color(0xFF1E60FF), size: 60),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          'Smart Cast',
+                          style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF0B1F5E),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  Text(
+                    'Bluetooth devices',
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
+                  ...demoDevices.map((deviceName) {
+                    return _buildDeviceListItem(
+                      deviceName,
+                      -60,
+                      isAr,
+                      onTap: () => Navigator.of(context).pushNamed(AppRoutes.bluetoothDetails),
+                    );
+                  }).toList(),
+                  const SizedBox(height: 24),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+            child: SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () => Navigator.of(context).pushNamed(AppRoutes.bluetoothDetails),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF074FAC),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: Text(
+                  loc.translate('devices.connectCast'),
+                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
