@@ -73,6 +73,9 @@ class BluetoothError extends BluetoothState {
 class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
   StreamSubscription<BleDevice>? _scanSubscription;
   final List<BleDevice> _scanResults = [];
+
+  StreamSubscription<List<int>>? _notificationSub;
+
   BleDevice? _connectedDevice;
   bool _isScanning = false;
 
@@ -98,6 +101,41 @@ class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
   }
 
   Future<bool> _ensureBluetoothReady(Emitter<BluetoothState> emit) async {
+    try {
+      // Check if Bluetooth is available
+      final BleState = await UniversalBle.getBluetoothAvailabilityState();
+      if (BleState == AvailabilityState.unsupported) {
+       print("unsupported");
+        return false;
+      }
+
+      // Check if Bluetooth is enabled
+      if (BleState != AvailabilityState.poweredOn) {
+        print("not poweredOn");
+        return false;
+      }
+
+      // Check permissions
+      var status = await UniversalBle.hasPermissions();
+      if (status != true) {
+        // Request permissions
+        await UniversalBle.requestPermissions();
+        status = await UniversalBle.hasPermissions();
+        if (status != true) {
+          print("not granted");
+          return false;
+        }
+      }
+
+      return true;
+    } catch (e) {
+      print("error: $e");
+      return false;
+    }
+
+
+
+
     try {
       final availability = await UniversalBle.getBluetoothAvailabilityState();
       if (availability == AvailabilityState.unsupported) {
@@ -179,6 +217,8 @@ class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
 
     _scanSubscription = UniversalBle.scanStream.listen(
       (BleDevice bleDevice) {
+
+        print("bleDevice.name: ${bleDevice.name}");
         final exists = _scanResults.any((d) => d.deviceId == bleDevice.deviceId);
         if (!exists) {
           _scanResults.add(bleDevice);
@@ -223,20 +263,84 @@ class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
   }
 
   Future<void> _onConnectToDevice(
-    ConnectToDeviceEvent event,
-    Emitter<BluetoothState> emit,
-  ) async {
+      ConnectToDeviceEvent event,
+      Emitter<BluetoothState> emit,
+      ) async {
     emit(BluetoothConnecting(event.device));
+
     try {
       _isScanning = false;
+
+      // Stop scanning safely
       try {
         await UniversalBle.stopScan();
       } catch (_) {}
+
       await _scanSubscription?.cancel();
       _scanSubscription = null;
 
+      // Connect
       await event.device.connect();
       _connectedDevice = event.device;
+
+      print('Connected to device');
+
+      // 🔴 REQUEST MTU (IMPORTANT for bigger packets)
+      try {
+        print('Requesting MTU 64...');
+        int mtu = await event.device.requestMtu(64);
+        print('MTU negotiated: $mtu');
+
+        if (mtu < 43) {
+          print('WARNING: MTU smaller than expected packet size');
+        }
+      } catch (e) {
+        print('MTU request failed: $e');
+      }
+
+      // 🔴 DISCOVER SERVICES
+      print('Discovering services...');
+      List<BleService> services = await event.device.discoverServices();
+
+      BleCharacteristic? notifyChar;
+
+      for (var service in services) {
+        print('Service: ${service.uuid}');
+
+        for (var char in service.characteristics) {
+          print('  Char: ${char.uuid} - ${char.properties}');
+
+          // 🔴 FIND NOTIFY CHARACTERISTIC
+          if (char.properties.contains(CharacteristicProperty.notify)) {
+            notifyChar = char;
+            break;
+          }
+        }
+
+        if (notifyChar != null) break;
+      }
+
+      if (notifyChar == null) {
+        throw Exception('No notify characteristic found');
+      }
+
+      // 🔴 LISTEN TO NOTIFICATIONS
+      _notificationSub = notifyChar.onValueReceived.listen(
+            (value) {
+          print('Received data: $value');
+
+          // TODO: process your bytes here
+          // _handleBytes(value);
+        },
+        onError: (error) {
+          print('Notification error: $error');
+        },
+      );
+
+      // 🔴 ENABLE NOTIFICATIONS
+      await notifyChar.notifications.subscribe();
+      print('Subscribed to notifications');
+
       emit(BluetoothConnected(event.device));
     } catch (e) {
       emit(BluetoothError('Failed to connect: $e'));
@@ -244,13 +348,21 @@ class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
   }
 
   Future<void> _onDisconnectFromDevice(
-    DisconnectFromDeviceEvent event,
-    Emitter<BluetoothState> emit,
-  ) async {
-    if (_connectedDevice != null) {
-      await _connectedDevice!.disconnect();
-      _connectedDevice = null;
+      DisconnectFromDeviceEvent event,
+      Emitter<BluetoothState> emit,
+      ) async {
+    try {
+      await _notificationSub?.cancel();
+      _notificationSub = null;
+
+      if (_connectedDevice != null) {
+        await _connectedDevice!.disconnect();
+        _connectedDevice = null;
+      }
+
       emit(BluetoothDisconnected());
+    } catch (e) {
+      emit(BluetoothError('Disconnect failed: $e'));
     }
   }
 

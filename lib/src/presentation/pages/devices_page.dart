@@ -11,15 +11,18 @@ class DevicesPage extends StatefulWidget {
   @override
   State<DevicesPage> createState() => _DevicesPageState();
 }
-
+bool useReal = false;
 class _DevicesPageState extends State<DevicesPage> {
   bool _initializationDone = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    useReal = AppConstants.useRealApi || true;
+
     if (!_initializationDone) {
-      if (AppConstants.useRealApi) {
+      if ( useReal ) {
         final bloc = context.read<BluetoothBloc>();
         bloc.add(CheckBluetoothStatusEvent());
         bloc.add(StartScanEvent());
@@ -51,7 +54,7 @@ class _DevicesPageState extends State<DevicesPage> {
         ),
         centerTitle: true,
       ),
-      body: AppConstants.useRealApi
+      body: (useReal)
           ? BlocConsumer<BluetoothBloc, BluetoothState>(
               listener: (context, state) {
                 if (state is BluetoothConnected) {
@@ -71,7 +74,43 @@ class _DevicesPageState extends State<DevicesPage> {
                           child: Column(
                             crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                             children: [
+
                               const SizedBox(height: 20),
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(24),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(18),
+                                  border: Border.all(color: Colors.grey.shade300),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: 120,
+                                      height: 120,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blue.shade50,
+                                        border: Border.all(color: const Color(0xFF1E60FF), width: 4),
+                                      ),
+                                      child: const Center(
+                                        child: Icon(Icons.bluetooth, color: Color(0xFF1E60FF), size: 60),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 24),
+                                    Text(
+                                      'Smart Cast',
+                                      style: const TextStyle(
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF0B1F5E),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 32),
 
                               // Status Header
                               _buildStatusHeader(loc, state),
@@ -266,7 +305,7 @@ class _DevicesPageState extends State<DevicesPage> {
           const SizedBox(height: 24),
           Center(
             child: Text(
-              loc.translate('bluetooth.searchingForDevice'),
+              loc.translate('devices.searchingForDevice'),
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),

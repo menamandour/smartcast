@@ -70,6 +70,7 @@
     "attachSmartSensor": "Attach the smart sensor to your cast to receive real-time data on pressure, temperature, circulation indicators, and movement tracking — ensuring optimal healing and preventing complications.",
     "normal": "Normal",
     "high": "High",
+    "rr": "ee",
     "trend": "Trend",
     "skinTempNoSigns": "No signs of skin irritation or infection detected.",
     "skinPressureNoSigns": "No pressure-related complications detected.",
@@ -150,7 +151,7 @@
   },
 
   "drawer": {
-    "select": "Select",
+    "select": "Selectt",
     "changeLanguage": "Change Language",
     "changeFont": "Change Font",
     "brightnessLevel": "Brightness Level",

@@ -275,6 +275,9 @@ class AppLocalizations {
         'tryAgain': 'Please try again',
       },
       'health': {
+        'high': 'High',
+        'low': "Low",
+        'normal': 'Normal',
         'monitorYourHealth': 'Monitor Your Healing Vital Signs',
         'pressure': 'Pressure',
         'temperature': 'Temperature',
@@ -464,6 +467,9 @@ class AppLocalizations {
         'tryAgain': 'يرجى المحاولة مرة أخرى',
       },
       'health': {
+        'high':'عالي',
+        "low": "منخفض",
+        "normal": "طبيعي",
         'monitorYourHealth': 'راقب علاماتك الحيوية أثناء الشفاء',
         'pressure': 'الضغط',
         'temperature': 'درجة الحرارة',
