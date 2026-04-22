@@ -1,6 +1,6 @@
 class AppConstants {
   // Toggle for Mock API vs Real API
-  static const bool useRealApi = true; // Set to true to send actual data to the API, false for predefined mock data
+  static const bool useRealApi = false; // Set to true to send actual data to the API, false for predefined mock data
 
   // API Configuration
   static const String baseUrl = 'https://webhook.site/9062e1f4-b62a-4987-b378-2470271ead0e';
