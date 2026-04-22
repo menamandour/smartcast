@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smartcast/src/config/routes/app_routes.dart';
+import 'package:smartcast/src/config/service_locator.dart';
+import 'package:smartcast/src/domain/repositories/auth_repository.dart';
+import 'package:smartcast/src/presentation/bloc/auth_bloc.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -13,15 +17,34 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    _navigateToNextPage();
+    _handleNavigation();
   }
 
-  void _navigateToNextPage() {
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        Navigator.of(context).pushReplacementNamed(AppRoutes.welcome);
+  Future<void> _handleNavigation() async {
+    await Future.delayed(const Duration(seconds: 3));
+    if (!mounted) return;
+
+    final authRepository = sl<AuthRepository>();
+    final hasSeenOnboarding = await authRepository.hasSeenOnboarding();
+
+    // Check auth status
+    final authBloc = context.read<AuthBloc>();
+    authBloc.add(const AuthCheckStatusEvent());
+
+    // Wait for the status check to complete
+    await for (final state in authBloc.stream) {
+      if (state is AuthAuthenticatedState) {
+        Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+        return;
+      } else if (state is AuthUnauthenticatedState || state is AuthErrorState) {
+        if (hasSeenOnboarding) {
+          Navigator.of(context).pushReplacementNamed(AppRoutes.login);
+        } else {
+          Navigator.of(context).pushReplacementNamed(AppRoutes.welcome);
+        }
+        return;
       }
-    });
+    }
   }
 
   @override
@@ -29,7 +52,6 @@ class _SplashPageState extends State<SplashPage> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background Image
           Positioned.fill(
             child: Image.asset(
               'assets/images/LoadingScreen.jpg',
@@ -40,12 +62,10 @@ class _SplashPageState extends State<SplashPage> {
               ),
             ),
           ),
-          // Content Overlay
           SafeArea(
             child: Column(
               children: [
                 const SizedBox(height: 60),
-                // "SmartCast" Text (from SVG)
                 Text(
                   'SmartCast',
                   style: GoogleFonts.inter(
@@ -56,12 +76,10 @@ class _SplashPageState extends State<SplashPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Logo / Loading circles (Approximating the SVG shapes)
                 Center(
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      // Outer Grey-ish Circle
                       Container(
                         width: 40,
                         height: 40,
@@ -73,7 +91,6 @@ class _SplashPageState extends State<SplashPage> {
                           ),
                         ),
                       ),
-                      // Inner Blue Loading Indicator
                       const SizedBox(
                         width: 40,
                         height: 40,

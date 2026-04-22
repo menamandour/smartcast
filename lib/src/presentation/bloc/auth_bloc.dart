@@ -17,11 +17,16 @@ abstract class AuthEvent extends Equatable {
 class AuthLoginEvent extends AuthEvent {
   final String email;
   final String password;
+  final bool rememberMe;
 
-  const AuthLoginEvent({required this.email, required this.password});
+  const AuthLoginEvent({
+    required this.email,
+    required this.password,
+    this.rememberMe = false,
+  });
 
   @override
-  List<Object?> get props => [email, password];
+  List<Object?> get props => [email, password, rememberMe];
 }
 
 class AuthRegisterEvent extends AuthEvent {
@@ -119,6 +124,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final result = await loginUseCase(
       email: event.email,
       password: event.password,
+      rememberMe: event.rememberMe,
     );
 
     result.fold(

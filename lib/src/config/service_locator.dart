@@ -26,12 +26,58 @@ Future<void> setupServiceLocator() async {
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerSingleton<SharedPreferences>(sharedPreferences);
 
+  // If there's no persisted token, ensure we don't keep a stale persisted user.
+  if (!sharedPreferences.containsKey(AppConstants.userTokenKey)) {
+    await sharedPreferences.remove(AppConstants.userKey);
+  }
+
   // Dio Setup
   final dio = Dio(
     BaseOptions(
       baseUrl: AppConstants.baseUrl,
       connectTimeout: AppConstants.connectionTimeout,
       receiveTimeout: AppConstants.receiveTimeout,
+    ),
+  );
+
+  dio.interceptors.add(
+    InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        final token = await sl<AuthLocalDataSource>().getToken();
+
+        if (token != null) {
+          options.headers['Authorization'] = 'Bearer $token';
+        } else {
+          options.headers.remove('Authorization');
+        }
+
+        handler.next(options);
+      },
+      onError: (err, handler) async {
+        final statusCode = err.response?.statusCode;
+        final alreadyRetried = err.requestOptions.extra['__retry429'] == true;
+
+        if (statusCode == 429 && !alreadyRetried) {
+          err.requestOptions.extra['__retry429'] = true;
+
+          final retryAfterHeader = err.response?.headers.value('retry-after');
+          final retryAfterSeconds = int.tryParse(retryAfterHeader ?? '');
+          final delaySeconds = (retryAfterSeconds != null && retryAfterSeconds > 0)
+              ? retryAfterSeconds
+              : 1;
+
+          await Future.delayed(Duration(seconds: delaySeconds));
+
+          try {
+            final response = await dio.fetch(err.requestOptions);
+            return handler.resolve(response);
+          } catch (e) {
+            // Fall through to default error handling below.
+          }
+        }
+
+        handler.next(err);
+      },
     ),
   );
 
@@ -55,6 +101,7 @@ Future<void> setupServiceLocator() async {
     AuthRepositoryImpl(
       remoteDataSource: sl<AuthRemoteDataSource>(),
       localDataSource: sl<AuthLocalDataSource>(),
+    sharedPreferences: sl<SharedPreferences>()
     ),
   );
 

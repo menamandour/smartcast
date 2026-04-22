@@ -46,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
       AuthLoginEvent(
         email: _emailController.text,
         password: _passwordController.text,
+        rememberMe: _rememberMe,
       ),
     );
   }

@@ -27,6 +27,28 @@ class HealthRemoteDataSourceImpl implements HealthRemoteDataSource {
 
   HealthRemoteDataSourceImpl({required this.dio});
 
+  Never _throwFromDioException(DioException e) {
+    final response = e.response;
+    if (response != null) {
+      final statusCode = response.statusCode;
+      final data = response.data;
+
+      String message = e.message ?? 'Request failed';
+      if (data is Map && data['message'] is String) {
+        message = data['message'] as String;
+      } else if (data is String && data.trim().isNotEmpty) {
+        message = data;
+      }
+
+      throw ServerException(
+        message: message,
+        code: (statusCode ?? 0).toString(),
+      );
+    }
+
+    throw NetworkException(message: e.message ?? 'Network error occurred');
+  }
+
   @override
   Future<HealthDataModel> recordHealthData({
     required String userId,
@@ -69,7 +91,7 @@ class HealthRemoteDataSourceImpl implements HealthRemoteDataSource {
         );
       }
     } on DioException catch (e) {
-      throw NetworkException(message: e.message ?? 'Network error occurred');
+      _throwFromDioException(e);
     } catch (e) {
       throw UnknownException(message: e.toString());
     }
@@ -113,7 +135,7 @@ class HealthRemoteDataSourceImpl implements HealthRemoteDataSource {
         );
       }
     } on DioException catch (e) {
-      throw NetworkException(message: e.message ?? 'Network error occurred');
+      _throwFromDioException(e);
     } catch (e) {
       throw UnknownException(message: e.toString());
     }
@@ -145,7 +167,7 @@ class HealthRemoteDataSourceImpl implements HealthRemoteDataSource {
       }
       return null;
     } on DioException catch (e) {
-      throw NetworkException(message: e.message ?? 'Network error occurred');
+      _throwFromDioException(e);
     } catch (e) {
       throw UnknownException(message: e.toString());
     }
@@ -165,7 +187,7 @@ class HealthRemoteDataSourceImpl implements HealthRemoteDataSource {
         );
       }
     } on DioException catch (e) {
-      throw NetworkException(message: e.message ?? 'Network error occurred');
+      _throwFromDioException(e);
     } catch (e) {
       throw UnknownException(message: e.toString());
     }

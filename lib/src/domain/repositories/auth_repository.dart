@@ -6,6 +6,7 @@ abstract class AuthRepository {
   Future<Either<Failure, User>> login({
     required String email,
     required String password,
+    bool rememberMe = false,
   });
 
   Future<Either<Failure, User>> register({
@@ -22,4 +23,8 @@ abstract class AuthRepository {
   Future<Either<Failure, void>> saveUserLocally(User user);
 
   Future<Either<Failure, User?>> getUserLocally();
+
+  Future<bool> hasSeenOnboarding();
+
+  Future<void> setOnboardingSeen();
 }

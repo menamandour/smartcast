@@ -1,9 +1,9 @@
 class AppConstants {
   // Toggle for Mock API vs Real API
-  static const bool useRealApi = false; // Set to true to send actual data to the API, false for predefined mock data
+  static const bool useRealApi = true; // Set to true to send actual data to the API, false for predefined mock data
 
   // API Configuration
-  static const String baseUrl = 'https://api.smartcast.com/api';
+  static const String baseUrl = 'https://webhook.site/9062e1f4-b62a-4987-b378-2470271ead0e';
   static const String apiVersion = 'v1';
   static const Duration connectionTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);
@@ -15,6 +15,7 @@ class AppConstants {
   static const String languageKey = 'language';
   static const String themeKey = 'theme';
   static const String fontKey = 'font_family';
+  static const String onboardingKey = 'has_seen_onboarding';
 
   // Database
   static const String dbName = 'smartcast.db';
